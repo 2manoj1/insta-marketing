@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-21T00:00:00Z",
+  "market_geographies": [
+    "India",
+    "Global",
+    "United States",
+    "UAE"
+  ],
+  "rates_by_tier": {
+    "Nano (1k - 10k)": {
+      "ugc_video_30d": "$150 - $300",
+      "sponsored_reel": "$200 - $350",
+      "story_set": "$50 - $100"
+    },
+    "Micro (10k - 50k)": {
+      "ugc_video_30d": "$300 - $550",
+      "sponsored_reel": "$450 - $750",
+      "story_set": "$120 - $250"
+    },
+    "Mid-Tier (50k - 200k)": {
+      "ugc_video_30d": "$550 - $1,100",
+      "sponsored_reel": "$850 - $1,800",
+      "story_set": "$250 - $600"
+    },
+    "Macro (200k - 1M)": {
+      "ugc_video_30d": "$1,200 - $2,800",
+      "sponsored_reel": "$2,200 - $5,500",
+      "story_set": "$600 - $1,500"
+    }
+  },
+  "ad_rights_multiplier": {
+    "30_days_meta_ads": 1.0,
+    "60_days_meta_ads": 1.25,
+    "90_days_meta_ads": 1.45,
+    "in_perpetuity": 2.2
+  },
+  "average_email_open_rate": "42.5%",
+  "average_reply_rate": "18.3%"
+}

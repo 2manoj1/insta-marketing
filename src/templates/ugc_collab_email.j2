@@ -1,0 +1,26 @@
+Subject: {{ pitch.subject_line }}
+
+Hi {{ brand.brand_name }} Partnerships Team,
+
+I'm reaching out from the talent management team representing @{{ creator.username }} ({{ "{:,}".format(creator.followers_count) }} engaged followers in {{ creator.niche_categories | join(', ') }}).
+
+We've been keeping a close eye on {{ brand.brand_name }} and specifically your focus on {{ brand.industry }}. @{{ creator.username }} has an audience that deeply trusts their recommendations for daily products.
+
+We would love to produce a high-converting UGC (User-Generated Content) video package specifically optimized for your paid social ads (TikTok / Meta Ads).
+
+Proposed Deliverables:
+- 1x 9:16 Vertical Video Asset (with 2 alternate high-retention opening hooks)
+- Raw B-Roll footage & clean audio cut
+- 30-Day Paid Social Advertising Usage & Whitelisting rights
+
+Suggested Creative Concept:
+"{{ brand.suggested_angle }}"
+
+{{ pitch.call_to_action }}
+
+Looking forward to the possibility of collaborating!
+
+Best regards,
+Talent Management Team for @{{ creator.username }}
+Instagram: {{ creator.instagram_url }}
+{% if creator.contact_email %}Direct Contact: {{ creator.contact_email }}{% endif %}

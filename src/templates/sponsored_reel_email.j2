@@ -1,0 +1,22 @@
+Subject: {{ pitch.subject_line }}
+
+Hi {{ brand.brand_name }} Team,
+
+I'm reaching out on behalf of @{{ creator.username }} ({{ "{:,}".format(creator.followers_count) }} followers).
+
+We love {{ brand.brand_name }}'s mission in {{ brand.industry }}. We are currently planning Q3/Q4 content integration opportunities and wanted to see if you'd be interested in a dedicated organic sponsorship:
+
+Deliverable Options:
+1. Dedicated Instagram Reel featuring seamless product integration.
+2. 3x Instagram Stories with direct link sticker + partner discount code.
+3. 30 days Spark/Whitelisting ad code.
+
+Rate card & media kit:
+- Creator Tier: {{ creator.ugc_profile.tier if creator.ugc_profile else "Creator" }}
+- Suggested Sponsorship: {{ creator.ugc_profile.estimated_rate_per_sponsored_reel_usd if creator.ugc_profile else "$350 - $700" }}
+
+{{ pitch.call_to_action }}
+
+Warm regards,
+Brand Partnerships for @{{ creator.username }}
+{{ creator.instagram_url }}

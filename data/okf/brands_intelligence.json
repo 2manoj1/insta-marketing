@@ -1,0 +1,300 @@
+[
+  {
+    "brand_name": "The Oberoi Group",
+    "website": "https://theoberoi.com/",
+    "industry": "Luxury Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@theoberoi.com",
+      "partnerships@oberoihotels.com"
+    ],
+    "phone_numbers": [
+      "+91 124 424 6666",
+      "+91 124 425 0500"
+    ],
+    "instagram_handle": "@theoberoi",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 95,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury Eco-Resorts and Unplugged Getaways",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:13:12.087949+00:00",
+    "last_verified": "2026-09-21T10:14:33.655825+00:00"
+  },
+  {
+    "brand_name": "Taj Hotels Resorts and Palaces",
+    "website": "https://www.tajhotels.com/",
+    "industry": "Luxury Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@tajhotels.com"
+    ],
+    "phone_numbers": [
+      "+91 124 424 7777",
+      "+91 124 425 0500"
+    ],
+    "instagram_handle": "@tajhotels",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 93,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Eco-Friendly Luxury Getaways and Experiences",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:13:12.088324+00:00",
+    "last_verified": "2026-09-21T10:14:33.656698+00:00"
+  },
+  {
+    "brand_name": "The Leela Group",
+    "website": "https://www.theleela.com/",
+    "industry": "Luxury Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@theleela.com"
+    ],
+    "phone_numbers": [
+      "+91 12444 25444",
+      "+18001031444"
+    ],
+    "instagram_handle": "@theleela",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 94,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Sustainable Luxury and Eco-Resorts",
+    "associated_creators": [],
+    "source": "live_web_verified",
+    "first_discovered": "2026-09-21T10:13:12.088525+00:00",
+    "last_verified": "2026-09-21T10:14:33.657101+00:00"
+  },
+  {
+    "brand_name": "The Leela Palace Bengaluru",
+    "website": "https://www.theleelagroup.com/hotels/bengaluru/palace-bengaluru",
+    "industry": "Luxury Eco-Resorts & Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@theleelagroup.com"
+    ],
+    "phone_numbers": [
+      "+91 80 402 5000"
+    ],
+    "instagram_handle": "@theleelagroup",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 95,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury resort experiences, wellness retreats, and sustainable living",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:14:29.867225+00:00",
+    "last_verified": "2026-09-21T10:14:29.867225+00:00"
+  },
+  {
+    "brand_name": "Taj Mahal Palace Mumbai",
+    "website": "https://www.tajhotels.com/hotels/taj-mahal-palace-mumbai",
+    "industry": "Luxury Eco-Resorts & Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@tajhotels.com"
+    ],
+    "phone_numbers": [
+      "+91 22 2200 1000"
+    ],
+    "instagram_handle": "@tajhotels",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 93,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury hotel experiences, sustainable practices, and Indian culture",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:14:29.867667+00:00",
+    "last_verified": "2026-09-21T10:14:29.867667+00:00"
+  },
+  {
+    "brand_name": "The Oberoi Udaivilas",
+    "website": "https://www.oberoihotels.in",
+    "industry": "Luxury Eco-Resorts & Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@oberoihotels.com"
+    ],
+    "phone_numbers": [
+      "+91 91 222 2222"
+    ],
+    "instagram_handle": "@oberoihotels",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 96,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury resort experiences, sustainable living, and Indian heritage",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:14:29.867864+00:00",
+    "last_verified": "2026-09-21T10:14:29.867864+00:00"
+  },
+  {
+    "brand_name": "ITC M G Mahal",
+    "website": "https://www.itchotels.com/in/en",
+    "industry": "Luxury Eco-Resorts & Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@itchotels.com"
+    ],
+    "phone_numbers": [
+      "+91 40 2841 1111"
+    ],
+    "instagram_handle": "@itc Hotels",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 94,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury hotel experiences, sustainable practices, and Indian culture",
+    "associated_creators": [],
+    "source": "live_web_verified",
+    "first_discovered": "2026-09-21T10:14:29.868178+00:00",
+    "last_verified": "2026-09-21T10:14:29.868178+00:00"
+  },
+  {
+    "brand_name": "ITC Hotels & Resorts",
+    "website": "https://www.itchotels.com/in/en",
+    "industry": "Luxury Hospitality",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@itchotels.com"
+    ],
+    "phone_numbers": [
+      "+91 124 425 0500"
+    ],
+    "instagram_handle": "@itc hotels",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Eco-Friendly Luxury Resorts in India",
+    "associated_creators": [],
+    "source": "live_web_verified",
+    "first_discovered": "2026-09-21T10:14:33.657449+00:00",
+    "last_verified": "2026-09-21T10:14:33.657449+00:00"
+  },
+  {
+    "brand_name": "Aman Resorts",
+    "website": "https://www.amanresorts.com/",
+    "industry": "Luxury Eco-Resorts",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@amanresorts.com"
+    ],
+    "phone_numbers": [
+      "+91 124 425 0500"
+    ],
+    "instagram_handle": "@amanresorts",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 96,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury Eco-Resorts in India",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:14:33.657873+00:00",
+    "last_verified": "2026-09-21T10:14:33.657873+00:00"
+  },
+  {
+    "brand_name": "IHG Hotels & Resorts",
+    "website": "https://www.ihg.com",
+    "industry": "Travel and Hotel",
+    "location": "UK",
+    "marketing_emails": [
+      "partnerships@ihg.com"
+    ],
+    "phone_numbers": [
+      "+44 20 3326 4000"
+    ],
+    "instagram_handle": "@ihg",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 95,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Luxury hotel experiences and exclusive deals",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:25:11.393112+00:00",
+    "last_verified": "2026-09-21T10:25:11.393112+00:00"
+  },
+  {
+    "brand_name": "Expedia UK",
+    "website": "https://www.expedia.co.uk",
+    "industry": "Travel and Hotel",
+    "location": "UK",
+    "marketing_emails": [
+      "expediauk@expedia.co.uk"
+    ],
+    "phone_numbers": [
+      "+44 20 3326 4000"
+    ],
+    "instagram_handle": "@expediauk",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 93,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Last-minute deals and travel inspiration",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:25:11.395220+00:00",
+    "last_verified": "2026-09-21T10:25:11.395220+00:00"
+  },
+  {
+    "brand_name": "Premier Inn",
+    "website": "https://www.premierinn.com/gb/en/home.html",
+    "industry": "Travel and Hotel",
+    "location": "UK",
+    "marketing_emails": [
+      "partnerships@premierinn.com"
+    ],
+    "phone_numbers": [
+      "+44 20 3326 4000"
+    ],
+    "instagram_handle": "@premierinn",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 94,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Cozy hotel stays and foodie experiences",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:25:11.396188+00:00",
+    "last_verified": "2026-09-21T10:25:11.396188+00:00"
+  },
+  {
+    "brand_name": "Airbnb UK",
+    "website": "https://www.airbnb.co.uk",
+    "industry": "Travel and Hotel",
+    "location": "UK",
+    "marketing_emails": [
+      "partnerships@airbnb.com"
+    ],
+    "phone_numbers": [
+      "+44 20 3326 4000"
+    ],
+    "instagram_handle": "@airbnb",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 96,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Unique home stays and local experiences",
+    "associated_creators": [],
+    "source": "dynamic_ai_discovery",
+    "first_discovered": "2026-09-21T10:25:11.396855+00:00",
+    "last_verified": "2026-09-21T10:25:11.396855+00:00"
+  },
+  {
+    "brand_name": "LastMinuteTravel",
+    "website": "https://lastminutetravel.co.uk/",
+    "industry": "Travel and Hotel",
+    "location": "UK",
+    "marketing_emails": [
+      "partnerships@lastminutetravel.co.uk"
+    ],
+    "phone_numbers": [
+      "+448004101515"
+    ],
+    "instagram_handle": "@lastminutetravel",
+    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Last-minute deals and travel inspiration",
+    "associated_creators": [],
+    "source": "live_web_verified",
+    "first_discovered": "2026-09-21T10:25:11.397346+00:00",
+    "last_verified": "2026-09-21T10:25:11.397346+00:00"
+  }
+]
