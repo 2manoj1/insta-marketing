@@ -117,7 +117,7 @@
     "associated_creators": [],
     "source": "live_web_verified",
     "first_discovered": "2026-09-21T17:51:54.648306+00:00",
-    "last_verified": "2026-09-21T18:19:26.445244+00:00",
+    "last_verified": "2026-09-21T18:55:30.873104+00:00",
     "email_tier": "Tier 2 (Marketing)"
   },
   {
@@ -263,7 +263,7 @@
     "associated_creators": [],
     "source": "live_web_discovery",
     "first_discovered": "2026-09-21T18:09:32.826731+00:00",
-    "last_verified": "2026-09-21T18:10:48.599975+00:00"
+    "last_verified": "2026-09-21T18:47:46.008762+00:00"
   },
   {
     "brand_name": "Travelosei",
@@ -360,5 +360,287 @@
     "first_discovered": "2026-09-21T18:10:05.224498+00:00",
     "last_verified": "2026-09-21T18:11:16.991433+00:00",
     "linkedin_url": "https://www.linkedin.com/company/13229286"
+  },
+  {
+    "brand_name": "Indiatoday",
+    "website": "https://www.indiatoday.in/",
+    "industry": "Sustainable fashion & apparel / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "factcheck@intoday.com"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@indiatoday",
+    "socials": {
+      "instagram": "@indiatoday",
+      "linkedin": null,
+      "youtube": "https://www.youtube.com/@indiatoday",
+      "twitter": "https://x.com/indiatoday",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Indiatoday&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": false,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Indiatoday product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:37:05.094373+00:00",
+    "last_verified": "2026-09-21T18:37:05.094373+00:00"
+  },
+  {
+    "brand_name": "Sustainable Fashion In",
+    "website": "https://www.nete.in/",
+    "industry": "Sustainable fashion & apparel / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@nete.in"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@netedotin",
+    "socials": {
+      "instagram": "@netedotin",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Sustainable+Fashion+In&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": false,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Sustainable Fashion In product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:37:15.283330+00:00",
+    "last_verified": "2026-09-21T18:37:15.283330+00:00"
+  },
+  {
+    "brand_name": "Ajmeratrends",
+    "website": "https://ajmeratrends.in",
+    "industry": "Sustainable fashion & apparel / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@ajmeratrends.com"
+    ],
+    "phone_numbers": [
+      "+91 90162 30468"
+    ],
+    "instagram_handle": "@ajmeratrends",
+    "socials": {
+      "instagram": "@ajmeratrends",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Ajmeratrends&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Ajmeratrends product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:37:24.848979+00:00",
+    "last_verified": "2026-09-21T18:37:24.848979+00:00"
+  },
+  {
+    "brand_name": "EcolineClothing",
+    "website": "https://ecolineclothing.com/",
+    "industry": "Sustainable fashion & apparel / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "contact@ecolineclothing.com"
+    ],
+    "phone_numbers": [
+      "+91 96776 18465"
+    ],
+    "instagram_handle": "@ecolineclothing",
+    "socials": {
+      "instagram": "@ecolineclothing",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=EcolineClothing&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase EcolineClothing product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:37:33.775066+00:00",
+    "last_verified": "2026-09-21T18:37:33.775066+00:00"
+  },
+  {
+    "brand_name": "Deepwear",
+    "website": "https://deepwear.info/blog/growth-and-sustainability-in-indias-apparel-industry-key-trends-and-future-projections/",
+    "industry": "Sustainable fashion & apparel / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "turkey@deepwear.info"
+    ],
+    "phone_numbers": [
+      "+862160314587"
+    ],
+    "instagram_handle": "@deepwear",
+    "socials": {
+      "instagram": "@deepwear",
+      "linkedin": "https://www.linkedin.com/company/deepwear",
+      "youtube": "https://www.youtube.com/@deepwearfashionagency",
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Deepwear&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Deepwear product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:37:47.397245+00:00",
+    "last_verified": "2026-09-21T18:37:47.397245+00:00"
+  },
+  {
+    "brand_name": "Contact Us",
+    "website": "https://www.theleela.com/contact-us",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@theleela.com"
+    ],
+    "phone_numbers": [
+      "+91 12447 71234"
+    ],
+    "instagram_handle": "@theleela",
+    "socials": {
+      "instagram": "@theleela",
+      "linkedin": "https://www.linkedin.com/company/theleela",
+      "youtube": null,
+      "twitter": "https://x.com/theleelahotels",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Contact+Us&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Contact Us product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:47:00.013990+00:00",
+    "last_verified": "2026-09-21T18:47:00.013990+00:00"
+  },
+  {
+    "brand_name": "Contact Us for Bookings & Inquiries",
+    "website": "https://www.oberoihotels.com/contact-us/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "emarketing@oberoigroup.com"
+    ],
+    "phone_numbers": [
+      "+91 14126 80101"
+    ],
+    "instagram_handle": "@oberoihotels",
+    "socials": {
+      "instagram": "@oberoihotels",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": "https://x.com/oberoihotels",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Contact+Us+for+Bookings+%26+Inquiries&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Contact Us for Bookings & Inquiries product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:47:09.767620+00:00",
+    "last_verified": "2026-09-21T18:47:09.767620+00:00"
+  },
+  {
+    "brand_name": "Contact Us || Louis Dreyfus Company",
+    "website": "https://www.ldc.com/contact-us/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@ldc.com"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@louis_dreyfus_company",
+    "socials": {
+      "instagram": "@louis_dreyfus_company",
+      "linkedin": "https://www.linkedin.com/company/louis-dreyfus-company",
+      "youtube": "https://www.youtube.com/channel/UCudmrVrWjfb5FdRm_1yrtUA",
+      "twitter": "https://x.com/WeAreLDC",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Contact+Us+%7C%7C+Louis+Dreyfus+Company&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": false,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Contact Us || Louis Dreyfus Company product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:47:18.474010+00:00",
+    "last_verified": "2026-09-21T18:47:18.474010+00:00"
+  },
+  {
+    "brand_name": "Contact CorroHealth",
+    "website": "https://corrohealth.com/contact/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "mediarelations@corrohealth.com"
+    ],
+    "phone_numbers": [
+      "+248443924222"
+    ],
+    "instagram_handle": "@corrohealth",
+    "socials": {
+      "instagram": "@corrohealth",
+      "linkedin": "https://www.linkedin.com/company/CorroHealth",
+      "youtube": null,
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Contact+CorroHealth&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": false,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Contact CorroHealth product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:47:36.088479+00:00",
+    "last_verified": "2026-09-21T18:47:36.088479+00:00"
   }
 ]

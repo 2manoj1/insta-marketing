@@ -66,6 +66,7 @@ class DatabaseManager:
                     meta_ad_library_url TEXT DEFAULT '',
                     email_tier TEXT DEFAULT 'Tier 2 (Marketing Desk)',
                     whatsapp_ready INTEGER DEFAULT 0,
+                    confidence_score INTEGER DEFAULT 80,
                     UNIQUE(creator_username, company_name)
                 );
             """)
@@ -85,6 +86,7 @@ class DatabaseManager:
                 ("meta_ad_library_url", "TEXT DEFAULT ''"),
                 ("email_tier", "TEXT DEFAULT 'Tier 2 (Marketing Desk)'"),
                 ("whatsapp_ready", "INTEGER DEFAULT 0"),
+                ("confidence_score", "INTEGER DEFAULT 80"),
             ]:
                 try:
                     conn.execute(f"ALTER TABLE brand_leads ADD COLUMN {col_name} {col_type}")
@@ -134,8 +136,9 @@ class DatabaseManager:
                             phone_number, instagram_handle, website, industry, location,
                             ad_probability, fit_score, collab_type, pitch_hook, scouted_at, source,
                             linkedin_url, youtube_url, twitter_url, linktree_url,
-                            collab_form_url, meta_ad_library_url, email_tier, whatsapp_ready
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            collab_form_url, meta_ad_library_url, email_tier, whatsapp_ready,
+                            confidence_score
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
                         username,
                         b.brand_name,
@@ -160,6 +163,7 @@ class DatabaseManager:
                         b.contact.meta_ad_library_url or "",
                         b.contact.email_tier or "Tier 2 (Marketing Desk)",
                         1 if b.contact.whatsapp_ready else 0,
+                        b.contact.confidence_score or 80,
                     ))
                     inserted += 1
                 except sqlite3.IntegrityError:
@@ -169,6 +173,45 @@ class DatabaseManager:
             conn.commit()
 
         return inserted
+
+    def update_lead_contact(
+        self,
+        lead_id: int,
+        email: Optional[str] = None,
+        phone: Optional[str] = None,
+        confidence_score: Optional[int] = None,
+        source: Optional[str] = None,
+    ) -> bool:
+        """Updates contact details and confidence score for an existing lead."""
+        updates = []
+        params = []
+        if email:
+            updates.append("marketing_email = ?")
+            params.append(email)
+        if phone:
+            updates.append("mobile_number = ?")
+            params.append(phone)
+            updates.append("phone_number = ?")
+            params.append(phone)
+            updates.append("whatsapp_ready = 1")
+        if confidence_score is not None:
+            updates.append("confidence_score = ?")
+            params.append(confidence_score)
+        if source:
+            updates.append("source = ?")
+            params.append(source)
+
+        if not updates:
+            return False
+
+        params.append(lead_id)
+        with self._get_connection() as conn:
+            cursor = conn.execute(
+                f"UPDATE brand_leads SET {', '.join(updates)} WHERE id = ?",
+                params
+            )
+            conn.commit()
+            return cursor.rowcount > 0
 
     def get_all_leads_for_creator(self, creator_username: str) -> List[Dict]:
         """Returns all cumulative unique leads stored for a creator."""

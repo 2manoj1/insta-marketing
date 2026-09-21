@@ -17,10 +17,12 @@ from src.agents.workflow_graph import marketing_graph
 from src.agents.draft_manager import draft_manager
 from src.agents.deep.director import deep_director
 from src.browser.session import session_manager
+from src.browser.brand_scraper import instagram_brand_scraper
 from src.config import settings
 from src.evals.benchmark_runner import benchmark_runner
 from src.mcp.server import mcp_server, MCP_TOOLS_MANIFEST
 from src.models.outreach import CampaignSummary
+from src.search.confidence import calculate_lead_confidence
 from src.skills.deep_bio_link import deep_bio_link_skill
 from src.storage.db import db_manager
 from src.storage.okf import okf_manager
@@ -343,6 +345,14 @@ class LiveSearchRequest(BaseModel):
     niche: str
     location: str = "India"
     limit: int = 5
+    exclude_brands: Optional[List[str]] = None
+    auto_save: bool = True
+    creator_handle: Optional[str] = None
+
+
+class BatchSaveLeadsRequest(BaseModel):
+    creator: Optional[str] = None
+    brands: List[Dict[str, Any]]
 
 
 @app.post("/api/enrich")
@@ -358,20 +368,141 @@ async def search_live_brands(req: LiveSearchRequest):
     """
     Live open-source WWW search (DuckDuckGo + DeepBioLink) for active brands & contacts.
     Returns real-time discovered brands with verified marketing emails & phone numbers.
+    If auto_save is True, automatically records them to SQLite database and OKF memory.
     """
     from src.search.brand_finder import brand_finder
+    exclude_set = set(req.exclude_brands or [])
+    creator = req.creator_handle or settings.creator_handle or "pilot_creator"
+    existing = db_manager.get_contacted_brand_names(creator)
+    exclude_set.update(existing)
+
     brands = await brand_finder.search_live_web_brands(
         niche=req.niche,
         location=req.location,
         limit=req.limit,
+        exclude_brands=exclude_set,
     )
+    for b in brands:
+        b.contact.confidence_score = calculate_lead_confidence(b)
+
+    saved_count = 0
+    if req.auto_save and brands:
+        saved_count = db_manager.save_leads(creator, brands)
+        for b in brands:
+            try:
+                okf_manager.save_brand_intelligence(b)
+            except Exception:
+                pass
+
     return {
         "status": "success",
         "niche": req.niche,
         "location": req.location,
         "count": len(brands),
+        "saved_count": saved_count,
         "brands": [b.model_dump() for b in brands],
     }
+
+
+@app.post("/api/leads/batch_save")
+async def batch_save_leads_endpoint(req: BatchSaveLeadsRequest):
+    """
+    1-click save one or more discovered brand candidates into SQLite verified leads.
+    """
+    creator = req.creator or settings.creator_handle or "pilot_creator"
+    opps = []
+    for b_dict in req.brands:
+        contact_dict = b_dict.get("contact", {})
+        contact = BrandContact(**contact_dict)
+        contact.confidence_score = calculate_lead_confidence(contact)
+        opp = BrandOpportunity(
+            brand_name=b_dict.get("brand_name", "Unknown"),
+            website=b_dict.get("website", ""),
+            industry=b_dict.get("industry", "Lifestyle"),
+            location=b_dict.get("location", "India"),
+            fit_score=b_dict.get("fit_score", 85),
+            ad_probability=b_dict.get("ad_probability", "High"),
+            collab_type=b_dict.get("collab_type", "UGC Video & Sponsored Reel"),
+            suggested_angle=b_dict.get("suggested_angle", ""),
+            contact=contact,
+        )
+        opps.append(opp)
+        try:
+            okf_manager.save_brand_intelligence(opp)
+        except Exception:
+            pass
+
+    inserted = db_manager.save_leads(creator, opps)
+    return {
+        "status": "success",
+        "inserted": inserted,
+        "message": f"Successfully saved {inserted} leads to verified directory.",
+    }
+
+
+class ImportSessionRequest(BaseModel):
+    session_token: Optional[str] = None
+    cookies: Optional[Any] = None
+
+
+class CdpSyncRequest(BaseModel):
+    cdp_url: str = "http://127.0.0.1:9222"
+
+
+class ScrapeBrandInstagramRequest(BaseModel):
+    handle: str
+    lead_id: Optional[int] = None
+
+
+@app.post("/api/session/import")
+async def import_session_endpoint(req: ImportSessionRequest):
+    """
+    Imports Instagram session token or cookies from Google Chrome.
+    Accepts raw sessionid string, cookie header string, or Cookie-Editor JSON export.
+    """
+    payload = req.session_token or req.cookies
+    if not payload:
+        raise HTTPException(status_code=400, detail="Missing session_token or cookies payload.")
+
+    try:
+        res = session_manager.import_session_token(payload)
+        return {
+            "status": "success",
+            "message": "Instagram session successfully imported and verified!",
+            "details": res,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to import session: {str(e)}")
+
+
+@app.post("/api/session/sync_cdp")
+async def sync_cdp_endpoint(req: CdpSyncRequest):
+    """
+    Directly connects to a running Google Chrome instance via CDP to sync active Instagram session.
+    """
+    res = await session_manager.connect_and_sync_cdp(cdp_url=req.cdp_url)
+    if not res.get("success"):
+        raise HTTPException(status_code=400, detail=res.get("error", "CDP connection failed"))
+    return res
+
+
+@app.post("/api/brand/scrape_instagram")
+async def scrape_brand_instagram_endpoint(req: ScrapeBrandInstagramRequest):
+    """
+    Authenticated Instagram mobile action scraper.
+    Extracts direct Business profile buttons ('Contact', 'Email', 'Call', 'WhatsApp').
+    """
+    res = await instagram_brand_scraper.scrape_brand_profile(req.handle)
+    if req.lead_id and res.get("success"):
+        # Auto-update SQLite lead record if ID provided
+        db_manager.update_lead_contact(
+            lead_id=req.lead_id,
+            email=res.get("contact_email"),
+            phone=res.get("phone_number"),
+            confidence_score=res.get("confidence_score"),
+            source=res.get("source"),
+        )
+    return res
 
 
 @app.post("/api/login")

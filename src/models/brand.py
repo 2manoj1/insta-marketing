@@ -22,6 +22,7 @@ class BrandContact(BaseModel):
     meta_ad_library_url: Optional[str] = None
     email_tier: str = "Tier 2 (Marketing)"
     whatsapp_ready: bool = False
+    confidence_score: int = 80
     source: str = "direct"
 
     @field_validator("instagram_handle", mode="before")
@@ -86,3 +87,8 @@ class BrandOpportunity(BaseModel):
     @property
     def company_name(self) -> str:
         return self.brand_name
+
+    @property
+    def confidence_score(self) -> int:
+        return self.contact.confidence_score
+

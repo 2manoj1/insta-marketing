@@ -7,4 +7,7 @@ instagram_session.json
 data/campaign_*.json
 data/leads_pilot_*.json
 data/drafts/pilot_*
+data/browser_profile/
+data/test_chrome_profile/
+data/eval_benchmark_report.json
 
