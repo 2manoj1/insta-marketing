@@ -389,6 +389,19 @@ def verify_brand(
 
 
 @app.command()
+def reset(
+    yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
+):
+    """
+    Reset all data: SQLite DB, OKF intelligence, leads JSON, campaign files, and drafts.
+    Only verified brands discovered by agents will be re-added on next run.
+    """
+    print_pro_banner()
+    from scripts.reset_db import reset_all as do_reset
+    do_reset(confirm=not yes)
+
+
+@app.command()
 def serve(
     host: str = typer.Option("127.0.0.1", "--host", "-h", help="Server host"),
     port: int = typer.Option(8088, "--port", "-p", help="Server port"),
@@ -408,3 +421,4 @@ def serve(
 
 if __name__ == "__main__":
     app()
+

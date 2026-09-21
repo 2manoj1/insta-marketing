@@ -32,6 +32,7 @@ def test_okf_save_and_query(tmp_path: Path):
         contact=BrandContact(
             contact_email="partnerships@custombrand.io",
             mobile_number="+91 99887 76655",
+            source="live_web_verified",
         ),
     )
 

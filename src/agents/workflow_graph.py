@@ -13,6 +13,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from src.agents.adk_system import adk_orchestrator
 from src.agents.brand_scout_agent import brand_scout_agent
 from src.agents.draft_manager import draft_manager
 from src.agents.lead_finder_agent import lead_finder_agent
@@ -29,10 +30,11 @@ console = Console()
 
 
 class MarketingWorkflowState:
-    def __init__(self, handle: str, location: str = "Global", interests: Optional[List[str]] = None):
+    def __init__(self, handle: str, location: str = "Global", interests: Optional[List[str]] = None, deal_preference: str = "All"):
         self.handle = handle
         self.location = location
         self.interests = interests or []
+        self.deal_preference = deal_preference
         self.profile: Optional[CreatorProfile] = None
         self.brands: List[BrandOpportunity] = []
         self.pitches: List[OutreachPitch] = []
@@ -48,9 +50,11 @@ class MarketingWorkflowState:
 class MarketingWorkflowGraph:
     """
     Graph orchestrator for Influencer Marketing Manager multi-agent pipeline.
+    Governed by Google ADK (Agent Development Kit) multi-agent architecture.
     """
 
     def __init__(self):
+        self.adk = adk_orchestrator
         self.profiler = profiler_agent
         self.scout = brand_scout_agent
         self.lead_finder = lead_finder_agent
@@ -63,11 +67,12 @@ class MarketingWorkflowGraph:
         handle_or_url: str,
         location: str = "Global",
         interests: Optional[List[str]] = None,
+        deal_preference: str = "All",
         use_sample_data: bool = False,
         enable_hitl: bool = False,
         status_callback: Optional[Callable[[str, int], None]] = None,
     ) -> MarketingWorkflowState:
-        state = MarketingWorkflowState(handle_or_url, location, interests)
+        state = MarketingWorkflowState(handle_or_url, location, interests, deal_preference)
 
         def update_status(step_name: str, pct: int):
             state.log(f"Stage {pct}%: {step_name}")
@@ -75,7 +80,7 @@ class MarketingWorkflowGraph:
                 status_callback(step_name, pct)
 
         # ----------------------------------------------------
-        # Node 1: Profile Acquisition (Scraper Node)
+        # Node 1: Profile Acquisition (Playwright Scraper Node)
         # ----------------------------------------------------
         update_status("Acquiring Creator Profile via Playwright", 15)
         if use_sample_data or handle_or_url.lower() in ["sample", "demo", "mock", "test"]:
@@ -89,41 +94,32 @@ class MarketingWorkflowGraph:
                 console.print("[yellow]Falling back to mock creator profile to complete pipeline demonstration...[/yellow]")
                 state.profile = self.scraper.create_sample_profile(self.scraper.clean_handle(handle_or_url))
 
-        # ----------------------------------------------------
-        # Node 2: Creator Profiling & Media Kit Node
-        # ----------------------------------------------------
-        update_status("Synthesizing Creator Media Kit & UGC Rates", 40)
-        state.profile = self.profiler.profile_creator(state.profile)
-
-        # ----------------------------------------------------
-        # Node 3: Brand Opportunity Scout & Lead Finder Node
-        # ----------------------------------------------------
-        update_status(f"Finding High-Probability Advertisers in {location}", 65)
-        # Use location from bio if set and location is default
+        # Target location resolution
         target_loc = location
         if target_loc in ["Global", ""] and state.profile.location_hint:
             target_loc = state.profile.location_hint
 
-        state.brands = await self.lead_finder.find_brand_leads(
+        # ----------------------------------------------------
+        # Nodes 2-4: Google ADK Multi-Agent Orchestration
+        # ----------------------------------------------------
+        update_status("Google ADK Director: Dispatching Specialist Agents", 35)
+        update_status("Google ADK Profiler: Synthesizing Media Kit & UGC Rates", 50)
+        update_status(f"Google ADK Lead Scout: Discovering Genuine Advertisers in {target_loc}", 70)
+        update_status("Google ADK Pitch Drafter: Generating Bespoke Proposals & WhatsApp Pitches", 85)
+
+        state.profile, state.brands, state.pitches = await self.adk.execute_adk_pipeline(
             profile=state.profile,
             location=target_loc,
             interests=interests,
+            deal_preference=deal_preference,
             limit=5,
-        )
-
-        # ----------------------------------------------------
-        # Node 4: Pitch Drafter Node (Cold Email & IG DM)
-        # ----------------------------------------------------
-        update_status("Crafting Bespoke UGC & Sponsored Ad Pitches", 85)
-        state.pitches = self.drafter.draft_pitches(
-            profile=state.profile,
-            opportunities=state.brands,
         )
 
         # ----------------------------------------------------
         # Node 5: Human-in-the-Loop (HITL) Review Node
         # ----------------------------------------------------
         if enable_hitl:
+            update_status("Human-in-the-Loop Review: Awaiting Marketing Team Approval", 90)
             state.pitches = self.draft_mgr.hitl_interactive_review(state.pitches)
 
         # ----------------------------------------------------

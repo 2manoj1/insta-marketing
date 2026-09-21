@@ -4,3 +4,7 @@ __pycache__/
 .pytest_cache/
 .env
 instagram_session.json
+data/campaign_*.json
+data/leads_pilot_*.json
+data/drafts/pilot_*
+

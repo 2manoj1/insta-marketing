@@ -1,8 +1,9 @@
 """
 Brand and partnership opportunity data models.
 """
+import re
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class BrandContact(BaseModel):
@@ -13,7 +14,61 @@ class BrandContact(BaseModel):
     instagram_handle: Optional[str] = None
     website: Optional[str] = None
     contact_person: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    youtube_url: Optional[str] = None
+    twitter_url: Optional[str] = None
+    linktree_url: Optional[str] = None
+    collab_form_url: Optional[str] = None
+    meta_ad_library_url: Optional[str] = None
+    email_tier: str = "Tier 2 (Marketing)"
+    whatsapp_ready: bool = False
     source: str = "direct"
+
+    @field_validator("instagram_handle", mode="before")
+    @classmethod
+    def clean_instagram_handle(cls, v: Optional[str]) -> Optional[str]:
+        """Normalizes any handle or URL into standard @handle format, preventing doubled URLs."""
+        if not v or not isinstance(v, str):
+            return None
+        v = v.strip()
+        # Handle doubled or nested URLs, e.g. https://instagram.com/https://instagram.com/travelosei
+        while "instagram.com/" in v.lower():
+            v = v.split("instagram.com/")[-1]
+        v = v.split("?")[0].split("#")[0].strip("/@")
+        if not v or v.lower() in ["p", "reel", "stories", "explore", "about", "developer", "legal", "accounts"]:
+            return None
+        return f"@{v}"
+
+    @field_validator(
+        "website", "linkedin_url", "youtube_url", "twitter_url",
+        "linktree_url", "collab_form_url", "meta_ad_library_url",
+        mode="before"
+    )
+    @classmethod
+    def sanitize_url(cls, v: Optional[str]) -> Optional[str]:
+        """Sanitizes web URLs, fixing duplicated protocols and nested paths."""
+        if not v or not isinstance(v, str):
+            return None
+        v = v.strip()
+        if not v:
+            return None
+        # Fix duplicated protocols like https://https:// or http://https://
+        v = re.sub(r'^(https?://)+', 'https://', v, flags=re.IGNORECASE)
+        # Fix nested URLs like https://domain.com/https://domain.com/path
+        match = re.search(r'https?://[^\s/]+/+(https?://.+)$', v, flags=re.IGNORECASE)
+        if match:
+            v = match.group(1)
+        if not v.startswith("http://") and not v.startswith("https://"):
+            v = f"https://{v}"
+        return v
+
+    @property
+    def instagram_url(self) -> Optional[str]:
+        """Returns clean canonical Instagram profile URL."""
+        if self.instagram_handle:
+            h = self.instagram_handle.lstrip("@")
+            return f"https://instagram.com/{h}"
+        return None
 
 
 class BrandOpportunity(BaseModel):

@@ -65,6 +65,14 @@ class OKFManager:
             with open(self.creators_file, "w", encoding="utf-8") as f:
                 json.dump({}, f, indent=2)
 
+    def reset(self):
+        """Clears all OKF data files and reinitializes empty stores."""
+        import shutil
+        if self.okf_dir.exists():
+            shutil.rmtree(self.okf_dir)
+        self.okf_dir.mkdir(parents=True, exist_ok=True)
+        self._init_okf_files()
+
     def load_brands(self) -> List[Dict[str, Any]]:
         """Loads all brands in the OKF intelligence base."""
         try:
@@ -94,6 +102,16 @@ class OKFManager:
                     b.setdefault("marketing_emails", []).append(brand.contact.contact_email)
                 if brand.contact.mobile_number and brand.contact.mobile_number not in b.get("phone_numbers", []):
                     b.setdefault("phone_numbers", []).append(brand.contact.mobile_number)
+                if brand.contact.linkedin_url and not b.get("linkedin_url"):
+                    b["linkedin_url"] = brand.contact.linkedin_url
+                if brand.contact.collab_form_url and not b.get("collab_form_url"):
+                    b["collab_form_url"] = brand.contact.collab_form_url
+                if brand.contact.meta_ad_library_url and not b.get("meta_ad_library_url"):
+                    b["meta_ad_library_url"] = brand.contact.meta_ad_library_url
+                if brand.contact.email_tier:
+                    b["email_tier"] = brand.contact.email_tier
+                if brand.contact.whatsapp_ready:
+                    b["whatsapp_ready"] = brand.contact.whatsapp_ready
                 if creator_username:
                     b.setdefault("associated_creators", [])
                     if creator_username not in b["associated_creators"]:
@@ -101,6 +119,12 @@ class OKFManager:
                 break
 
         if not matched:
+            # Only persist brands with verified contact data
+            verified_sources = {'live_web_verified', 'live_web_discovery', 'okf_knowledge_framework', 'okf_enrichment'}
+            if brand.contact.source and brand.contact.source not in verified_sources:
+                logger.info(f"Skipping OKF persistence for unverified brand: {brand.brand_name} (source={brand.contact.source})")
+                return False
+
             emails = [brand.contact.contact_email] if brand.contact.contact_email else []
             phones = [brand.contact.mobile_number] if brand.contact.mobile_number else []
             if brand.contact.phone_number and brand.contact.phone_number not in phones:
@@ -114,6 +138,17 @@ class OKFManager:
                 "marketing_emails": emails,
                 "phone_numbers": phones,
                 "instagram_handle": brand.contact.instagram_handle,
+                "socials": {
+                    "instagram": brand.contact.instagram_handle,
+                    "linkedin": brand.contact.linkedin_url,
+                    "youtube": brand.contact.youtube_url,
+                    "twitter": brand.contact.twitter_url,
+                    "linktree": brand.contact.linktree_url,
+                },
+                "collab_form_url": brand.contact.collab_form_url,
+                "meta_ad_library_url": brand.contact.meta_ad_library_url,
+                "email_tier": brand.contact.email_tier,
+                "whatsapp_ready": brand.contact.whatsapp_ready,
                 "ad_probability": brand.ad_probability,
                 "fit_score": brand.fit_score,
                 "collab_type": brand.collab_type,
@@ -128,6 +163,23 @@ class OKFManager:
             json.dump(brands, f, indent=2)
 
         return True
+
+    def remove_brand(self, brand_name: str) -> bool:
+        """
+        Removes a brand from the OKF store by name (e.g. if flagged as junk/test).
+        """
+        brands = self.load_brands()
+        key = brand_name.lower().strip()
+        original_count = len(brands)
+        filtered = [b for b in brands if b.get("brand_name", "").lower().strip() != key]
+        if len(filtered) < original_count:
+            try:
+                with open(self.brands_file, "w", encoding="utf-8") as f:
+                    json.dump(filtered, f, indent=2)
+                return True
+            except Exception as e:
+                logger.error(f"Error removing brand {brand_name} from OKF: {e}")
+        return False
 
     def query_brands(
         self,

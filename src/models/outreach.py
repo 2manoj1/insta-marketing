@@ -15,10 +15,12 @@ class CollaborationDeliverable(BaseModel):
 class OutreachPitch(BaseModel):
     brand_name: str
     recipient_email: str
+    recipient_phone: Optional[str] = Field(default=None, description="Direct marketing/WhatsApp phone number")
     creator_username: str
     subject_line: str
     email_body: str
     instagram_dm: str
+    whatsapp_pitch: Optional[str] = Field(default=None, description="1-click WhatsApp message for direct outreach")
     deliverables: List[CollaborationDeliverable] = Field(default_factory=list)
     call_to_action: str = Field(default="Can I send over a 20-second sample concept video for your team to review?")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

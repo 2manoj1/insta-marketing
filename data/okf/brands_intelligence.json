@@ -1,300 +1,364 @@
 [
   {
-    "brand_name": "The Oberoi Group",
-    "website": "https://theoberoi.com/",
-    "industry": "Luxury Hospitality",
+    "brand_name": "Collabr",
+    "website": "https://collabr.in/",
+    "industry": "Beauty and self-care / DTC",
     "location": "India",
     "marketing_emails": [
-      "partnerships@theoberoi.com",
-      "partnerships@oberoihotels.com"
+      "partnerships@collabr.in"
     ],
-    "phone_numbers": [
-      "+91 124 424 6666",
-      "+91 124 425 0500"
-    ],
-    "instagram_handle": "@theoberoi",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 95,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury Eco-Resorts and Unplugged Getaways",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:13:12.087949+00:00",
-    "last_verified": "2026-09-21T10:14:33.655825+00:00"
-  },
-  {
-    "brand_name": "Taj Hotels Resorts and Palaces",
-    "website": "https://www.tajhotels.com/",
-    "industry": "Luxury Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "partnerships@tajhotels.com"
-    ],
-    "phone_numbers": [
-      "+91 124 424 7777",
-      "+91 124 425 0500"
-    ],
-    "instagram_handle": "@tajhotels",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 93,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Eco-Friendly Luxury Getaways and Experiences",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:13:12.088324+00:00",
-    "last_verified": "2026-09-21T10:14:33.656698+00:00"
-  },
-  {
-    "brand_name": "The Leela Group",
-    "website": "https://www.theleela.com/",
-    "industry": "Luxury Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "reservations@theleela.com"
-    ],
-    "phone_numbers": [
-      "+91 12444 25444",
-      "+18001031444"
-    ],
-    "instagram_handle": "@theleela",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 94,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Sustainable Luxury and Eco-Resorts",
-    "associated_creators": [],
-    "source": "live_web_verified",
-    "first_discovered": "2026-09-21T10:13:12.088525+00:00",
-    "last_verified": "2026-09-21T10:14:33.657101+00:00"
-  },
-  {
-    "brand_name": "The Leela Palace Bengaluru",
-    "website": "https://www.theleelagroup.com/hotels/bengaluru/palace-bengaluru",
-    "industry": "Luxury Eco-Resorts & Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "partnerships@theleelagroup.com"
-    ],
-    "phone_numbers": [
-      "+91 80 402 5000"
-    ],
-    "instagram_handle": "@theleelagroup",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 95,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury resort experiences, wellness retreats, and sustainable living",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:14:29.867225+00:00",
-    "last_verified": "2026-09-21T10:14:29.867225+00:00"
-  },
-  {
-    "brand_name": "Taj Mahal Palace Mumbai",
-    "website": "https://www.tajhotels.com/hotels/taj-mahal-palace-mumbai",
-    "industry": "Luxury Eco-Resorts & Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "partnerships@tajhotels.com"
-    ],
-    "phone_numbers": [
-      "+91 22 2200 1000"
-    ],
-    "instagram_handle": "@tajhotels",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 93,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury hotel experiences, sustainable practices, and Indian culture",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:14:29.867667+00:00",
-    "last_verified": "2026-09-21T10:14:29.867667+00:00"
-  },
-  {
-    "brand_name": "The Oberoi Udaivilas",
-    "website": "https://www.oberoihotels.in",
-    "industry": "Luxury Eco-Resorts & Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "partnerships@oberoihotels.com"
-    ],
-    "phone_numbers": [
-      "+91 91 222 2222"
-    ],
-    "instagram_handle": "@oberoihotels",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 96,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury resort experiences, sustainable living, and Indian heritage",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:14:29.867864+00:00",
-    "last_verified": "2026-09-21T10:14:29.867864+00:00"
-  },
-  {
-    "brand_name": "ITC M G Mahal",
-    "website": "https://www.itchotels.com/in/en",
-    "industry": "Luxury Eco-Resorts & Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "reservations@itchotels.com"
-    ],
-    "phone_numbers": [
-      "+91 40 2841 1111"
-    ],
-    "instagram_handle": "@itc Hotels",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 94,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury hotel experiences, sustainable practices, and Indian culture",
-    "associated_creators": [],
-    "source": "live_web_verified",
-    "first_discovered": "2026-09-21T10:14:29.868178+00:00",
-    "last_verified": "2026-09-21T10:14:29.868178+00:00"
-  },
-  {
-    "brand_name": "ITC Hotels & Resorts",
-    "website": "https://www.itchotels.com/in/en",
-    "industry": "Luxury Hospitality",
-    "location": "India",
-    "marketing_emails": [
-      "reservations@itchotels.com"
-    ],
-    "phone_numbers": [
-      "+91 124 425 0500"
-    ],
-    "instagram_handle": "@itc hotels",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "phone_numbers": [],
+    "instagram_handle": "@collabr",
+    "ad_probability": "High (Active Live Web Brand)",
     "fit_score": 92,
     "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Eco-Friendly Luxury Resorts in India",
+    "suggested_angle": "Showcase Collabr product integration in aesthetic routine.",
     "associated_creators": [],
-    "source": "live_web_verified",
-    "first_discovered": "2026-09-21T10:14:33.657449+00:00",
-    "last_verified": "2026-09-21T10:14:33.657449+00:00"
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:49:12.280238+00:00",
+    "last_verified": "2026-09-21T17:56:12.000220+00:00"
   },
   {
-    "brand_name": "Aman Resorts",
-    "website": "https://www.amanresorts.com/",
-    "industry": "Luxury Eco-Resorts",
+    "brand_name": "Grazia",
+    "website": "https://www.grazia.co.in/beauty-and-health/all-the-winners-of-grazia-indie-beauty-superstars-2025_-14610.html",
+    "industry": "Beauty and self-care / DTC",
     "location": "India",
     "marketing_emails": [
-      "partnerships@amanresorts.com"
+      "partnerships@wwm.co.in"
     ],
-    "phone_numbers": [
-      "+91 124 425 0500"
-    ],
-    "instagram_handle": "@amanresorts",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 96,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury Eco-Resorts in India",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:14:33.657873+00:00",
-    "last_verified": "2026-09-21T10:14:33.657873+00:00"
-  },
-  {
-    "brand_name": "IHG Hotels & Resorts",
-    "website": "https://www.ihg.com",
-    "industry": "Travel and Hotel",
-    "location": "UK",
-    "marketing_emails": [
-      "partnerships@ihg.com"
-    ],
-    "phone_numbers": [
-      "+44 20 3326 4000"
-    ],
-    "instagram_handle": "@ihg",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 95,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Luxury hotel experiences and exclusive deals",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:25:11.393112+00:00",
-    "last_verified": "2026-09-21T10:25:11.393112+00:00"
-  },
-  {
-    "brand_name": "Expedia UK",
-    "website": "https://www.expedia.co.uk",
-    "industry": "Travel and Hotel",
-    "location": "UK",
-    "marketing_emails": [
-      "expediauk@expedia.co.uk"
-    ],
-    "phone_numbers": [
-      "+44 20 3326 4000"
-    ],
-    "instagram_handle": "@expediauk",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 93,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Last-minute deals and travel inspiration",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:25:11.395220+00:00",
-    "last_verified": "2026-09-21T10:25:11.395220+00:00"
-  },
-  {
-    "brand_name": "Premier Inn",
-    "website": "https://www.premierinn.com/gb/en/home.html",
-    "industry": "Travel and Hotel",
-    "location": "UK",
-    "marketing_emails": [
-      "partnerships@premierinn.com"
-    ],
-    "phone_numbers": [
-      "+44 20 3326 4000"
-    ],
-    "instagram_handle": "@premierinn",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 94,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Cozy hotel stays and foodie experiences",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:25:11.396188+00:00",
-    "last_verified": "2026-09-21T10:25:11.396188+00:00"
-  },
-  {
-    "brand_name": "Airbnb UK",
-    "website": "https://www.airbnb.co.uk",
-    "industry": "Travel and Hotel",
-    "location": "UK",
-    "marketing_emails": [
-      "partnerships@airbnb.com"
-    ],
-    "phone_numbers": [
-      "+44 20 3326 4000"
-    ],
-    "instagram_handle": "@airbnb",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
-    "fit_score": 96,
-    "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Unique home stays and local experiences",
-    "associated_creators": [],
-    "source": "dynamic_ai_discovery",
-    "first_discovered": "2026-09-21T10:25:11.396855+00:00",
-    "last_verified": "2026-09-21T10:25:11.396855+00:00"
-  },
-  {
-    "brand_name": "LastMinuteTravel",
-    "website": "https://lastminutetravel.co.uk/",
-    "industry": "Travel and Hotel",
-    "location": "UK",
-    "marketing_emails": [
-      "partnerships@lastminutetravel.co.uk"
-    ],
-    "phone_numbers": [
-      "+448004101515"
-    ],
-    "instagram_handle": "@lastminutetravel",
-    "ad_probability": "Very High (Active Instagram Reels advertiser)",
+    "phone_numbers": [],
+    "instagram_handle": "@grazia",
+    "ad_probability": "High (Active Live Web Brand)",
     "fit_score": 92,
     "collab_type": "UGC Video & Sponsored Reel",
-    "suggested_angle": "Last-minute deals and travel inspiration",
+    "suggested_angle": "Showcase Grazia product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:49:17.047348+00:00",
+    "last_verified": "2026-09-21T17:49:17.047348+00:00"
+  },
+  {
+    "brand_name": "mFluencer",
+    "website": "https://mfluencer.in/",
+    "industry": "Beauty and self-care / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "info@mfluencer.in"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@mfluencer",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase mFluencer product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:49:18.704813+00:00",
+    "last_verified": "2026-09-21T17:49:18.704813+00:00"
+  },
+  {
+    "brand_name": "Locobuzz",
+    "website": "https://locobuzz.com/blogs/indian-skincare-influencers/",
+    "industry": "Beauty and self-care / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "contactus@locobuzz.com"
+    ],
+    "phone_numbers": [
+      "+91 85916 92683"
+    ],
+    "instagram_handle": "@locobuzz",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Locobuzz product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:49:23.302292+00:00",
+    "last_verified": "2026-09-21T17:49:23.302292+00:00"
+  },
+  {
+    "brand_name": "Influencer",
+    "website": "https://www.influencer.in/",
+    "industry": "Beauty and self-care / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "enquiry@influencer.in"
+    ],
+    "phone_numbers": [
+      "+91 82681 57925"
+    ],
+    "instagram_handle": "@influencer",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Influencer product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:49:26.493566+00:00",
+    "last_verified": "2026-09-21T17:49:26.493566+00:00"
+  },
+  {
+    "brand_name": "Keychron",
+    "website": "https://keychron.com",
+    "industry": "Tech / Mechanical Keyboards",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@keychron.com"
+    ],
+    "phone_numbers": [
+      "+91 98888 12345"
+    ],
+    "instagram_handle": null,
+    "ad_probability": "High (Active Instagram & Meta Ad Buyer)",
+    "fit_score": 95,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Minimalist desk setup and ergonomics showcase",
     "associated_creators": [],
     "source": "live_web_verified",
-    "first_discovered": "2026-09-21T10:25:11.397346+00:00",
-    "last_verified": "2026-09-21T10:25:11.397346+00:00"
+    "first_discovered": "2026-09-21T17:51:54.648306+00:00",
+    "last_verified": "2026-09-21T18:19:26.445244+00:00",
+    "email_tier": "Tier 2 (Marketing)"
+  },
+  {
+    "brand_name": "Top Hotel Chains in",
+    "website": "https://ipocentral.in/top-hotel-chains-in-india/",
+    "industry": "Hotel and resort / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@ipocentral.in"
+    ],
+    "phone_numbers": [
+      "+91 90163 23692"
+    ],
+    "instagram_handle": "@ipocentral",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Top Hotel Chains in product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:55:42.590554+00:00",
+    "last_verified": "2026-09-21T17:55:42.590554+00:00"
+  },
+  {
+    "brand_name": "Influencermarketinghub",
+    "website": "https://influencermarketinghub.com/hotels-resorts-influencer-marketing-campaigns/",
+    "industry": "Hotel and resort / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@influencermarketinghub.com"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@influencermarketinghub",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Influencermarketinghub product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:55:51.388572+00:00",
+    "last_verified": "2026-09-21T17:55:51.388572+00:00"
+  },
+  {
+    "brand_name": "Alcorgetaways",
+    "website": "https://alcorgetaways.com/services/influencer-marketing-for-hotels-and-resorts/",
+    "industry": "Hotel and resort / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@alcorgetaways.com"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@alcorgetaways",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Alcorgetaways product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:56:02.310648+00:00",
+    "last_verified": "2026-09-21T17:56:02.310648+00:00"
+  },
+  {
+    "brand_name": "Influencer Partnerships",
+    "website": "https://www.retvensservices.com/post/influencer-partnerships-elevating-your-hotel-brand-through-social-media-collaborations",
+    "industry": "Hotel and resort / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "cso@retvensservices.com"
+    ],
+    "phone_numbers": [
+      "+91 91652 77277"
+    ],
+    "instagram_handle": "@retvensservices",
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Influencer Partnerships product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T17:56:12.688376+00:00",
+    "last_verified": "2026-09-21T17:56:12.688376+00:00"
+  },
+  {
+    "brand_name": "Orchid Hotels",
+    "website": "https://www.orchidhotel.com/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@orchidhotel.com"
+    ],
+    "phone_numbers": [
+      "+91 91691 66789"
+    ],
+    "instagram_handle": "@orchidhotel",
+    "socials": {
+      "instagram": "@orchidhotel",
+      "linkedin": "https://www.linkedin.com/company/the-orchid-mumbai",
+      "youtube": null,
+      "twitter": "https://x.com/TheOrchidMumbai",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Orchid+Hotels&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Orchid Hotels product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:09:22.854706+00:00",
+    "last_verified": "2026-09-21T18:10:39.095821+00:00",
+    "linkedin_url": "https://www.linkedin.com/company/the-orchid-mumbai"
+  },
+  {
+    "brand_name": "Eco Hotels",
+    "website": "https://www.ecohotels.in/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "reservations@ecohotels.in"
+    ],
+    "phone_numbers": [
+      "+91 90049 35763"
+    ],
+    "instagram_handle": "@ecohotels_resorts",
+    "socials": {
+      "instagram": "https://instagram.com/ecohotels_resorts",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": "https://x.com/eco_hotels",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Eco+Hotels&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Eco Hotels product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:09:32.826731+00:00",
+    "last_verified": "2026-09-21T18:10:48.599975+00:00"
+  },
+  {
+    "brand_name": "Travelosei",
+    "website": "https://www.travelosei.com/hello-india/best-eco-resorts-in-india",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "india@travelosei.com"
+    ],
+    "phone_numbers": [
+      "+18133448306"
+    ],
+    "instagram_handle": "@travelosei",
+    "socials": {
+      "instagram": "https://instagram.com/travelosei",
+      "linkedin": "https://www.linkedin.com/company/travelosei",
+      "youtube": "https://www.youtube.com/@TRAVELOSEI",
+      "twitter": "https://x.com/travelo_sei",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Travelosei&search_type=keyword_unordered",
+    "email_tier": "Tier 3 (Corporate / Support)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Travelosei product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:09:42.520477+00:00",
+    "last_verified": "2026-09-21T18:10:57.524652+00:00",
+    "linkedin_url": "https://www.linkedin.com/company/travelosei"
+  },
+  {
+    "brand_name": "Sustainable Luxury",
+    "website": "https://renesthotels.com/whats-new/sustainable-luxury",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "partnerships@renesthotels.com"
+    ],
+    "phone_numbers": [],
+    "instagram_handle": "@renesthotels",
+    "socials": {
+      "instagram": "@renesthotels",
+      "linkedin": null,
+      "youtube": null,
+      "twitter": null,
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Sustainable+Luxury&search_type=keyword_unordered",
+    "email_tier": "Tier 2 (Marketing Desk)",
+    "whatsapp_ready": false,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Sustainable Luxury product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:09:59.172550+00:00",
+    "last_verified": "2026-09-21T18:11:13.097350+00:00"
+  },
+  {
+    "brand_name": "Ecoplore",
+    "website": "https://ecoplore.com/",
+    "industry": "Luxury eco-resorts & stays / DTC",
+    "location": "India",
+    "marketing_emails": [
+      "prernaprasad@ecoplore.com"
+    ],
+    "phone_numbers": [
+      "+91 98119 71407"
+    ],
+    "instagram_handle": "@ecoplore",
+    "socials": {
+      "instagram": "https://instagram.com/ecoplore",
+      "linkedin": "https://www.linkedin.com/company/13229286",
+      "youtube": "https://www.youtube.com/channel/UC4tI9ZUDE6qOBOLYMrheE3Q",
+      "twitter": "https://x.com/Ecoplore",
+      "linktree": null
+    },
+    "collab_form_url": null,
+    "meta_ad_library_url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=Ecoplore&search_type=keyword_unordered",
+    "email_tier": "Tier 1 (Direct PR / Collab)",
+    "whatsapp_ready": true,
+    "ad_probability": "High (Active Live Web Brand)",
+    "fit_score": 92,
+    "collab_type": "UGC Video & Sponsored Reel",
+    "suggested_angle": "Showcase Ecoplore product integration in aesthetic routine.",
+    "associated_creators": [],
+    "source": "live_web_discovery",
+    "first_discovered": "2026-09-21T18:10:05.224498+00:00",
+    "last_verified": "2026-09-21T18:11:16.991433+00:00",
+    "linkedin_url": "https://www.linkedin.com/company/13229286"
   }
 ]

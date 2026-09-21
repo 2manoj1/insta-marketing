@@ -37,6 +37,7 @@ class PitchDrafterAgent:
 
     def _draft_single_pitch(self, profile: CreatorProfile, brand: BrandOpportunity) -> OutreachPitch:
         recipient = brand.contact.contact_email or f"partnerships@{brand.website.replace('https://', '').replace('http://', '').split('/')[0]}"
+        recipient_phone = brand.contact.mobile_number or brand.contact.phone_number
         niche_str = ", ".join(profile.niche_categories or ["Tech & Lifestyle"])
         tier_str = profile.ugc_profile.tier if profile.ugc_profile else "Content Creator"
         suggested_rate = profile.ugc_profile.estimated_rate_per_ugc_video_usd if profile.ugc_profile else "$250 - $450"
@@ -60,6 +61,7 @@ Draft a high-converting, polite, and modern pitch package in JSON format:
   "subject_line": "Catchy, professional subject line (e.g. Quick question re: {brand.brand_name} UGC / Collab Idea with @{profile.username})",
   "email_body": "Complete cold email (greeting, authentic brand appreciation, creator intro & metrics, proposed collaboration concept with hooks, deliverable proposal, and clear frictionless call-to-action). Sign off as 'Talent Management for @{profile.username}'.",
   "instagram_dm": "Short, punchy 3-4 sentence message suitable for Instagram direct message to {brand.brand_name}'s social team.",
+  "whatsapp_pitch": "Short, professional 2-3 sentence WhatsApp outreach message introducing @{profile.username} ({profile.followers_count:,} followers) and proposing a 20-second UGC sample concept for {brand.brand_name}.",
   "deliverables": [
     {{
       "title": "1x High-Converting 9:16 UGC Video (Organic & Paid Ad Ready)",
@@ -95,10 +97,12 @@ Draft a high-converting, polite, and modern pitch package in JSON format:
             return OutreachPitch(
                 brand_name=brand.brand_name,
                 recipient_email=recipient,
+                recipient_phone=recipient_phone,
                 creator_username=profile.username,
                 subject_line=data.get("subject_line", f"Collab proposal: {brand.brand_name} x @{profile.username} (UGC Ad Concept)"),
                 email_body=data.get("email_body", self._fallback_email(profile, brand)),
                 instagram_dm=data.get("instagram_dm", self._fallback_dm(profile, brand)),
+                whatsapp_pitch=data.get("whatsapp_pitch", self._fallback_whatsapp(profile, brand)),
                 deliverables=deliverables or self._default_deliverables(),
                 call_to_action=data.get("call_to_action", "Can I send over a quick 20-second storyboard for your team to inspect?"),
             )
@@ -107,10 +111,12 @@ Draft a high-converting, polite, and modern pitch package in JSON format:
             return OutreachPitch(
                 brand_name=brand.brand_name,
                 recipient_email=recipient,
+                recipient_phone=recipient_phone,
                 creator_username=profile.username,
                 subject_line=f"Quick Collab Idea for {brand.brand_name} + @{profile.username}",
                 email_body=self._fallback_email(profile, brand),
                 instagram_dm=self._fallback_dm(profile, brand),
+                whatsapp_pitch=self._fallback_whatsapp(profile, brand),
                 deliverables=self._default_deliverables(),
                 call_to_action="Can I send over a brief 20-second video concept for your team to review?",
             )
@@ -136,6 +142,9 @@ Talent Partnerships & Management for @{profile.username}
 
     def _fallback_dm(self, profile: CreatorProfile, brand: BrandOpportunity) -> str:
         return f"Hey {brand.brand_name} team! 👋 Reaching out from @{profile.username}'s management ({profile.followers_count:,} followers). We love your products and have a high-converting UGC video concept tailored for your paid ads. Who is the best person on your influencer marketing team to send a quick 20-second concept to?"
+
+    def _fallback_whatsapp(self, profile: CreatorProfile, brand: BrandOpportunity) -> str:
+        return f"Hi {brand.brand_name} Team! 👋 Reaching out on behalf of @{profile.username} ({profile.followers_count:,} followers in {', '.join(profile.niche_categories[:2] if profile.niche_categories else ['Lifestyle'])}). We have an aesthetic UGC video concept prepared for {brand.brand_name} ready for your paid social ads. Would you like me to share a 20-second storyboard preview here?"
 
     def _default_deliverables(self) -> List[CollaborationDeliverable]:
         return [

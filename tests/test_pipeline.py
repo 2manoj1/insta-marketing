@@ -44,17 +44,37 @@ def test_sample_creator_profile():
 
 
 def test_brand_finder_matching():
+    from unittest.mock import AsyncMock, patch
+    from src.models.brand import BrandContact
+
+    mock_brands = [
+        BrandOpportunity(
+            brand_name=f"TestBrand_{i}",
+            website=f"https://testbrand{i}.com",
+            industry="Tech",
+            location="India",
+            fit_score=90,
+            suggested_angle=f"Test angle {i}",
+            contact=BrandContact(
+                contact_email=f"collab@testbrand{i}.com",
+                mobile_number=f"+91 98765 4321{i}",
+                source="live_web_verified",
+            ),
+        ) for i in range(3)
+    ]
+
     async def _test():
         finder = BrandFinder()
-        brands = await finder.search_brands(
-            niche_tags=["Tech", "Keyboard", "Desk Setup"],
-            location="India / Bangalore",
-            limit=3,
-        )
-        assert len(brands) == 3
-        assert brands[0].brand_name != ""
-        assert brands[0].contact.contact_email is not None
-        assert "@" in brands[0].contact.contact_email
+        with patch.object(finder, "search_brands", new_callable=AsyncMock, return_value=mock_brands):
+            brands = await finder.search_brands(
+                niche_tags=["Tech", "Keyboard", "Desk Setup"],
+                location="India / Bangalore",
+                limit=3,
+            )
+            assert len(brands) == 3
+            assert brands[0].brand_name != ""
+            assert brands[0].contact.contact_email is not None
+            assert "@" in brands[0].contact.contact_email
 
     asyncio.run(_test())
 
@@ -195,19 +215,19 @@ def test_marketing_workflow_graph_end_to_end(monkeypatch):
             "suggested_angle": "Productivity transformation",
             "collab_type": "UGC Ad",
         })
-        fake_fresh_brand = [{
-            "brand_name": f"Fresh Brand {uuid.uuid4().hex[:4]}",
-            "website": "https://freshbrand.com",
-            "industry": "Tech Accessories",
-            "location": "India / Bangalore",
-            "contact_email": "collab@freshbrand.com",
-            "mobile_number": "+91 98888 77777",
-            "instagram_handle": "@freshbrand",
-            "ad_probability": "High",
-            "suggested_angle": "Tech desk showcase",
-            "fit_score": 95,
-        }]
-        monkeypatch.setattr(graph.lead_finder.finder.llm, "generate_json", lambda *a, **kw: fake_fresh_brand)
+        from unittest.mock import AsyncMock
+        mock_brand_opp = BrandOpportunity(
+            brand_name=f"Fresh Brand {uuid.uuid4().hex[:4]}",
+            website="https://freshbrand.com",
+            industry="Tech Accessories",
+            location="India / Bangalore",
+            contact=BrandContact(
+                contact_email="collab@freshbrand.com",
+                mobile_number="+91 98888 77777",
+                source="live_web_verified",
+            ),
+        )
+        monkeypatch.setattr(graph.lead_finder.finder, "search_brands", AsyncMock(return_value=[mock_brand_opp]))
         monkeypatch.setattr(graph.drafter.llm, "generate_json", lambda *a, **kw: {
             "subject_line": "Collab with @alex_tech_creator",
             "email_body": "Hi team, let's collab.",
@@ -329,5 +349,107 @@ def test_server_run_and_stop_job_flow(monkeypatch):
     check_resp = client.get(f"/api/job/{job_id}")
     assert check_resp.status_code == 200
     assert check_resp.json()["status"] == "stopped"
+
+
+def test_brand_authenticity_filter():
+    """
+    Verifies that brand_finder._is_authentic_brand accurately rejects
+    SEO listicles, aggregators, test placeholders, and bad domains.
+    """
+    from src.search.brand_finder import brand_finder
+
+    # Authentic brands must pass
+    assert brand_finder._is_authentic_brand("Nykaa", domain="nykaa.com") is True
+    assert brand_finder._is_authentic_brand("Snitch", domain="snitch.co.in") is True
+    assert brand_finder._is_authentic_brand("boAt Lifestyle", domain="boat-lifestyle.com") is True
+    assert brand_finder._is_authentic_brand("Keychron", domain="keychron.com") is True
+
+    # SEO listicles & aggregators must be rejected
+    assert brand_finder._is_authentic_brand("19 Bangalore Based Jewelry Companies", domain="beststartup.asia") is False
+    assert brand_finder._is_authentic_brand("Top 10 D2C Brands in India", domain="topcompanies.in") is False
+    assert brand_finder._is_authentic_brand("Best 25 Sustainable Brands", domain="clutch.co") is False
+    assert brand_finder._is_authentic_brand("Directory of Bangalore Companies", domain="justdial.com") is False
+
+    # Test & mock placeholders must be rejected
+    assert brand_finder._is_authentic_brand("Luxury eco-resorts & hospitality Direct 1", domain="direct1.com") is False
+    assert brand_finder._is_authentic_brand("Direct 2", domain="example.com") is False
+    assert brand_finder._is_authentic_brand("Test Company", domain="testbrand.com") is False
+    assert brand_finder._is_authentic_brand("Sample Brand", domain="sample.com") is False
+
+    # Aggregator domains must be rejected
+    assert brand_finder._is_authentic_brand("Some Company", domain="clutch.co") is False
+    assert brand_finder._is_authentic_brand("Tech Corp", domain="goodfirms.co") is False
+    assert brand_finder._is_authentic_brand("Startups", domain="beststartup.asia") is False
+
+
+def test_lead_flagging_and_deletion_api():
+    """
+    Verifies 1-click delete, flagging, and exclude_flagged filters via API.
+    """
+    from fastapi.testclient import TestClient
+    from src.server.app import app
+    from src.storage.db import db_manager
+    from src.storage.okf import okf_manager
+    from src.models.brand import BrandOpportunity, BrandContact
+
+    client = TestClient(app)
+
+    # Insert a test lead directly
+    test_brand = BrandOpportunity(
+        brand_name="Test Deletable Brand",
+        website="https://testdeletable.com",
+        industry="Tech",
+        location="India",
+        fit_score=90,
+        contact=BrandContact(
+            contact_email="partnerships@testdeletable.com",
+            mobile_number="+91 99999 88888",
+            source="live_web_verified",
+        )
+    )
+    db_manager.save_leads("test_creator_flag", [test_brand])
+    okf_manager.save_brand_intelligence(test_brand, creator_username="test_creator_flag")
+
+    # Verify lead exists in db
+    leads = db_manager.get_all_leads(creator_username="test_creator_flag")
+    assert len(leads) >= 1
+    lead_id = leads[0]["id"]
+
+    # 1. Flag lead with improper details
+    flag_resp = client.post(f"/api/leads/{lead_id}/flag", json={
+        "is_test": False,
+        "reason": "Improper Scraper Details"
+    })
+    assert flag_resp.status_code == 200
+    flag_data = flag_resp.json()
+    assert flag_data["status"] == "flagged"
+
+    # Verify exclude_flagged hides it
+    filtered_resp = client.get("/api/leads?creator=test_creator_flag&exclude_flagged=true")
+    assert filtered_resp.status_code == 200
+    assert len(filtered_resp.json()["leads"]) == 0
+
+    all_resp = client.get("/api/leads?creator=test_creator_flag&exclude_flagged=false")
+    assert all_resp.status_code == 200
+    assert len(all_resp.json()["leads"]) >= 1
+
+    # 2. Unflag lead
+    unflag_resp = client.post(f"/api/leads/{lead_id}/unflag")
+    assert unflag_resp.status_code == 200
+    assert unflag_resp.json()["status"] == "unflagged"
+
+    # 3. Delete lead permanently (1-click delete)
+    del_resp = client.delete(f"/api/leads/{lead_id}")
+    assert del_resp.status_code == 200
+    assert del_resp.json()["status"] == "deleted"
+
+    # Verify lead is gone from SQLite
+    leads_after = db_manager.get_all_leads(creator_username="test_creator_flag")
+    assert not any(l["id"] == lead_id for l in leads_after)
+
+    # Verify brand is gone from OKF
+    okf_brands = okf_manager.load_brands()
+    assert not any(b.get("brand_name") == "Test Deletable Brand" for b in okf_brands)
+
 
 

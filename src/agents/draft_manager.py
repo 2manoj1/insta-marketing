@@ -38,7 +38,17 @@ class DraftManager:
             safe_name = "".join(c for c in p.brand_name if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
             file_path = draft_dir / f"{safe_name}_pitch.txt"
 
+            whatsapp_section = ""
+            if p.whatsapp_pitch or p.recipient_phone:
+                whatsapp_section = f"""{"=" * 70}
+WHATSAPP QUICK OUTREACH:
+Phone: {p.recipient_phone or 'Direct PR Line'}
+Message:
+{p.whatsapp_pitch or p.instagram_dm}
+"""
+
             content = f"""TO: {p.recipient_email}
+PHONE: {p.recipient_phone or ''}
 COMPANY: {p.brand_name}
 CREATOR: @{p.creator_username}
 STATUS: {p.status.upper()}
@@ -52,7 +62,7 @@ EMAIL BODY:
 INSTAGRAM DIRECT MESSAGE (DM) ALTERNATIVE:
 
 {p.instagram_dm}
-
+{whatsapp_section}
 {"=" * 70}
 DELIVERABLES PROPOSED:
 """
@@ -64,7 +74,7 @@ DELIVERABLES PROPOSED:
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
 
-        console.print(f"[bold green]✓ {len(pitches)} Editable Email Drafts saved to [cyan]{draft_dir}[/cyan][/bold green]")
+        console.print(f"[bold green]✓ {len(pitches)} Editable Email & WhatsApp Drafts saved to [cyan]{draft_dir}[/cyan][/bold green]")
         return draft_dir
 
     def hitl_interactive_review(
@@ -222,13 +232,29 @@ DELIVERABLES PROPOSED:
                         "creator": meta.get("CREATOR", f"@{creator_name}").lstrip("@"),
                         "company_name": meta.get("COMPANY", txt_file.stem.replace("_pitch", "").replace("_", " ")),
                         "recipient_email": meta.get("TO", ""),
+                        "recipient_phone": meta.get("PHONE", ""),
                         "subject": meta.get("SUBJECT", ""),
+                        "status": meta.get("STATUS", "DRAFT"),
                         "full_content": text,
                     })
                 except Exception as e:
                     logger.warning(f"Failed to read draft file {txt_file}: {e}")
 
         return results
+
+    def update_draft_file(self, filename: str, full_content: str, creator_username: Optional[str] = None) -> bool:
+        """
+        Updates an existing draft file on disk from human edits in CLI or Web UI.
+        """
+        base_dir = settings.data_dir / "drafts"
+        target_files = list(base_dir.rglob(filename))
+        if not target_files:
+            return False
+
+        target_file = target_files[0]
+        target_file.write_text(full_content, encoding="utf-8")
+        logger.info(f"Updated draft file on disk: {target_file}")
+        return True
 
 
 draft_manager = DraftManager()

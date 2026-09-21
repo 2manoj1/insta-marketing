@@ -132,10 +132,13 @@ class DeepBrandScoutAgent:
                 crawl_res = await self.bio_scraper.crawl_brand_site(opp.website, max_subpages=2)
                 if crawl_res.get("emails") and not has_email:
                     opp.contact.contact_email = crawl_res["emails"][0]
+                    opp.contact.source = "live_web_verified"
+                    has_email = True
                     log(f"    [green]✓ Discovered email via deep crawl:[/green] {opp.contact.contact_email}")
                 if crawl_res.get("phones") and not has_mobile:
                     opp.contact.mobile_number = crawl_res["phones"][0]
                     opp.contact.phone_number = crawl_res["phones"][0]
+                    has_mobile = True
                     log(f"    [green]✓ Discovered phone via deep crawl:[/green] {opp.contact.mobile_number}")
 
             # Verify contacts with ContactVerifierSkill
@@ -144,12 +147,23 @@ class DeepBrandScoutAgent:
                 opp.contact.mobile_number = verification["phone_verification"]["phone"]
                 opp.contact.phone_number = verification["phone_verification"]["phone"]
 
-            # Step 5: Save to SQLite and OKF
-            self.db.save_leads(profile.username, [opp])
-            self.okf.save_brand_intelligence(opp, creator_username=profile.username)
+            # Step 5: VERIFICATION GATE — only persist brands with confirmed real contacts
+            is_verified = opp.contact.source in (
+                "live_web_verified", "live_web_discovery",
+                "okf_knowledge_store", "okf_knowledge_framework",
+            )
+
+            if is_verified:
+                self.db.save_leads(profile.username, [opp])
+                self.okf.save_brand_intelligence(opp, creator_username=profile.username)
+                log(f"    [green]✓ VERIFIED — saved to DB & OKF[/green]")
+            else:
+                log(f"    [yellow]⚠ Unverified (source={opp.contact.source}) — shown but NOT saved to DB/OKF[/yellow]")
+
             final_leads.append(opp)
 
-        log(f"[bold green]✓ DeepBrandScoutAgent finalized {len(final_leads)} verified brand leads (committed to SQLite & OKF).[/bold green]")
+        verified_count = sum(1 for o in final_leads if o.contact.source in ("live_web_verified", "live_web_discovery", "okf_knowledge_store", "okf_knowledge_framework"))
+        log(f"[bold green]✓ DeepBrandScoutAgent finalized {len(final_leads)} brand leads ({verified_count} verified & persisted).[/bold green]")
         return final_leads
 
 

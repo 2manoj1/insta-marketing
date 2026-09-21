@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -47,6 +47,7 @@ class RunRequest(BaseModel):
     handle_or_url: str
     location: str = "Global"
     interests: Optional[List[str]] = None
+    deal_preference: str = "All"
     use_sample: bool = False
 
 
@@ -116,20 +117,93 @@ async def get_database_creators():
     return db_manager.get_creators()
 
 
+class FlagLeadRequest(BaseModel):
+    is_test: bool = True
+    reason: str = "Test / Mock Company"
+
+
 @app.get("/api/leads")
 async def get_saved_leads(
     creator: Optional[str] = None,
     search: Optional[str] = None,
     limit: int = 100,
+    verified_only: bool = False,
+    exclude_flagged: bool = False,
 ):
     """
     Directly queries SQLite database for saved brand leads, verified emails,
     and phone numbers without running any agents.
     """
-    leads = db_manager.get_all_leads(creator_username=creator, search=search, limit=limit)
+    leads = db_manager.get_all_leads(
+        creator_username=creator,
+        search=search,
+        limit=limit,
+        verified_only=verified_only,
+        exclude_flagged=exclude_flagged,
+    )
     return {
         "count": len(leads),
         "leads": leads,
+    }
+
+
+@app.delete("/api/leads/{lead_id}")
+async def delete_lead_endpoint(lead_id: int):
+    """
+    1-click delete endpoint: Permanently removes a lead from SQLite and clears it from OKF memory.
+    """
+    company_name = db_manager.delete_lead(lead_id)
+    if not company_name:
+        raise HTTPException(status_code=404, detail=f"Lead with id {lead_id} not found")
+    
+    # Also remove from OKF memory store if present
+    okf_manager.remove_brand(company_name)
+
+    return {
+        "status": "deleted",
+        "message": f"Lead '{company_name}' removed permanently.",
+        "id": lead_id,
+        "company_name": company_name,
+    }
+
+
+@app.post("/api/leads/{lead_id}/flag")
+async def flag_lead_endpoint(lead_id: int, req: FlagLeadRequest):
+    """
+    Flags a lead if it is a test company, mock, or has improper details from web/crawlers.
+    If flagged as test, automatically purges it from OKF memory.
+    """
+    success = db_manager.flag_lead(lead_id=lead_id, reason=req.reason, is_test=req.is_test)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Lead with id {lead_id} not found")
+
+    if req.is_test:
+        # Find company name to purge from OKF memory
+        leads = db_manager.get_all_leads(limit=1000)
+        for l in leads:
+            if l.get("id") == lead_id:
+                okf_manager.remove_brand(l.get("company_name", ""))
+                break
+
+    return {
+        "status": "flagged",
+        "message": f"Lead {lead_id} flagged: {req.reason}",
+        "id": lead_id,
+        "is_test": req.is_test,
+        "reason": req.reason,
+    }
+
+
+@app.post("/api/leads/{lead_id}/unflag")
+async def unflag_lead_endpoint(lead_id: int):
+    """Clears any flag on a lead."""
+    success = db_manager.unflag_lead(lead_id=lead_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Lead with id {lead_id} not found")
+    return {
+        "status": "unflagged",
+        "message": f"Flag removed from lead {lead_id}",
+        "id": lead_id,
     }
 
 
@@ -145,6 +219,32 @@ async def get_saved_drafts(creator: Optional[str] = None):
     }
 
 
+class DraftUpdateRequest(BaseModel):
+    filename: str
+    full_content: str
+    creator: Optional[str] = None
+
+
+@app.post("/api/drafts/update")
+async def update_draft(req: DraftUpdateRequest):
+    """
+    Human-in-the-loop (HITL) endpoint: Updates an existing pitch draft file on disk.
+    Allows marketing teams to customize and approve pitch copy directly in the UI.
+    """
+    success = draft_manager.update_draft_file(
+        filename=req.filename,
+        full_content=req.full_content,
+        creator_username=req.creator,
+    )
+    if not success:
+        raise HTTPException(status_code=404, detail="Draft file not found on disk")
+    return {
+        "status": "success",
+        "message": f"Draft '{req.filename}' updated successfully on disk",
+        "filename": req.filename,
+    }
+
+
 @app.get("/api/okf")
 async def get_okf_data():
     """
@@ -155,6 +255,19 @@ async def get_okf_data():
         "summary": okf_manager.get_summary(),
         "brands": okf_manager.load_brands(),
         "benchmarks": okf_manager.get_benchmarks(),
+    }
+
+
+@app.delete("/api/okf/brand/{brand_name}")
+async def delete_okf_brand(brand_name: str):
+    """
+    1-click remove brand from OKF store (e.g. if flagged as junk or test).
+    """
+    success = okf_manager.remove_brand(brand_name)
+    return {
+        "status": "success" if success else "not_found",
+        "brand_name": brand_name,
+        "removed": success,
     }
 
 
@@ -290,6 +403,7 @@ async def _execute_job(job_id: str, req: RunRequest):
             handle_or_url=handle,
             location=req.location,
             interests=req.interests,
+            deal_preference=req.deal_preference,
             use_sample_data=req.use_sample,
             enable_hitl=False,
             status_callback=_status_cb,
@@ -394,6 +508,7 @@ async def run_pipeline_sync(req: RunRequest):
             handle_or_url=handle,
             location=req.location,
             interests=req.interests,
+            deal_preference=req.deal_preference,
             use_sample_data=req.use_sample,
             enable_hitl=False,
         )
@@ -407,6 +522,82 @@ async def run_pipeline_sync(req: RunRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/reset")
+async def reset_all_data():
+    """
+    Resets all data stores: SQLite DB, OKF intelligence, leads, drafts, campaigns.
+    Use with caution — this is irreversible.
+    """
+    import shutil
+    summary = {"deleted": []}
+
+    # Reset SQLite DB
+    db_path = settings.data_dir / "leads.db"
+    if db_path.exists():
+        db_path.unlink()
+        summary["deleted"].append("leads.db")
+    db_manager._init_db()
+
+    # Reset OKF
+    okf_manager.reset()
+    summary["deleted"].append("okf/")
+
+    # Clear leads JSON files
+    for f in settings.data_dir.glob("leads_*.json"):
+        f.unlink()
+        summary["deleted"].append(f.name)
+
+    # Clear campaign files
+    for f in settings.data_dir.glob("campaign_*.json"):
+        f.unlink()
+        summary["deleted"].append(f.name)
+
+    # Clear drafts
+    drafts_dir = settings.data_dir / "drafts"
+    if drafts_dir.exists():
+        shutil.rmtree(drafts_dir)
+        drafts_dir.mkdir(parents=True, exist_ok=True)
+        summary["deleted"].append("drafts/")
+
+    # Clear eval report
+    eval_path = settings.data_dir / "eval_benchmark_report.json"
+    if eval_path.exists():
+        eval_path.unlink()
+        summary["deleted"].append("eval_benchmark_report.json")
+
+    return {
+        "status": "reset_complete",
+        "items_deleted": len(summary["deleted"]),
+        "details": summary["deleted"],
+    }
+
+
+@app.get("/api/leads/export")
+async def export_leads_csv(creator: Optional[str] = None):
+    """
+    Exports all leads as a downloadable CSV file.
+    """
+    import csv
+    import io
+
+    leads = db_manager.get_all_leads(creator_username=creator, limit=10000)
+    output = io.StringIO()
+    if leads:
+        writer = csv.DictWriter(output, fieldnames=leads[0].keys())
+        writer.writeheader()
+        writer.writerows(leads)
+    else:
+        output.write("company_name,marketing_email,mobile_number,instagram_handle,website,industry,fit_score,ad_probability,source\n")
+
+    output.seek(0)
+    filename = f"leads_{creator or 'all'}_{datetime.now().strftime('%Y%m%d')}.csv"
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
 
 
 @app.get("/api/campaigns")

@@ -1,4 +1,5 @@
-TO: marketing@thetamara.com
+TO: collab@testbrand0.com
+PHONE: 
 COMPANY: The Tamara Resorts
 CREATOR: @iva_mana5
 STATUS: DRAFT

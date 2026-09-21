@@ -40,6 +40,89 @@ class BrandFinder:
         self.contact_verifier = contact_verifier_skill
         self.okf = okf_manager
 
+    AGGREGATOR_DOMAINS: Set[str] = {
+        "beststartup", "clutch.co", "goodfirms", "listverse", "topcompanies",
+        "directory", "yellowpages", "crunchbase", "justdial", "sulekha",
+        "tradeindia", "indiamart", "quora", "reddit", "wikipedia", "medium.com",
+        "linkedin", "glassdoor", "ambitionbox", "tripadvisor", "booking.com",
+        "agoda.com", "makemytrip", "zomato.com", "swiggy.com", "amazon.",
+        "flipkart.", "etsy.com", "pinterest.", "youtube.", "facebook.", "twitter.",
+        "x.com", "instagram.com", "github.com", "trustpilot.com", "g2.com",
+    }
+
+    def _sanitize_brand_name(self, raw_title: str, domain: str) -> str:
+        """Cleans and extracts true brand name from page title or domain."""
+        clean = raw_title.split(" - ")[0].split(" | ")[0].split(":")[0].split(" – ")[0].strip()
+        # Remove common marketing suffixes
+        for suffix in ["Official Website", "Official Store", "Online Store", "India", "Shop Online", "Home", "Homepage"]:
+            clean = re.sub(rf"\b{suffix}\b", "", clean, flags=re.IGNORECASE).strip()
+        if not clean or len(clean) > 35:
+            clean = domain.split(".")[0].capitalize()
+        return clean.strip(" -|:")
+
+    def _is_authentic_brand(self, brand_name: str, domain: str = "", title: str = "") -> bool:
+        """
+        Guarantees that discovered candidates are genuine brands or companies,
+        strictly rejecting SEO listicles, directories, aggregators, and mock/test placeholders.
+        """
+        if not brand_name:
+            return False
+
+        name_lower = brand_name.lower().strip()
+        domain_lower = domain.lower().strip()
+        title_lower = title.lower().strip()
+
+        # 1. Filter out aggregator & directory domains
+        if domain_lower:
+            for bad_d in self.AGGREGATOR_DOMAINS:
+                if bad_d in domain_lower:
+                    logger.debug(f"Rejecting aggregator domain: {domain_lower}")
+                    return False
+
+        # 2. Reject mock, test, and placeholder patterns
+        test_patterns = [
+            r"direct\s*\d+",
+            r"test\s*brand",
+            r"test\s*company",
+            r"sample\s*brand",
+            r"placeholder",
+            r"mock\s*brand",
+            r"testbrand",
+            r"example\.com",
+            r"direct\d+\.com",
+        ]
+        for pat in test_patterns:
+            if re.search(pat, name_lower) or (domain_lower and re.search(pat, domain_lower)):
+                logger.debug(f"Rejecting test/mock pattern in candidate: {brand_name}")
+                return False
+
+        # 3. Reject listicle titles (e.g., '19 Bangalore Based Jewelry Companies', 'Top 10 D2C Brands')
+        listicle_regex = r"^(\d+)\s+"
+        if re.search(listicle_regex, name_lower) or re.search(listicle_regex, title_lower):
+            logger.debug(f"Rejecting listicle candidate: {brand_name}")
+            return False
+
+        listicle_keywords = [
+            "top 10", "top 15", "top 20", "top 25", "top 50", "top 100",
+            "best 10", "best 15", "best 20", "best 25", "best 50",
+            "companies in", "startups in", "brands in", "list of",
+            "directory of", "yellow pages", "ranking of", "review of",
+            "guide to", "how to", "why you should", "overview of"
+        ]
+        if any(lk in name_lower for lk in listicle_keywords) or any(lk in title_lower for lk in listicle_keywords):
+            logger.debug(f"Rejecting aggregator keyword in candidate: {brand_name}")
+            return False
+
+        # 4. Length sanity: authentic brand names are concise (< 35 chars)
+        if len(brand_name) > 35 or len(brand_name) < 2:
+            return False
+
+        # 5. Invalid URL / Host characters check
+        if domain_lower and ("&" in domain_lower or "%" in domain_lower or " " in domain_lower):
+            return False
+
+        return True
+
     async def search_live_web_brands(
         self,
         niche: str,
@@ -50,7 +133,7 @@ class BrandFinder:
         """
         Dynamically discovers live brands from the open internet using DuckDuckGo
         and crawls their websites/Linktrees for verified marketing contacts.
-        Zero hardcoded brand data.
+        Zero hardcoded brand data. Strictly filters out aggregators & mock names.
         """
         excluded = {name.lower().strip() for name in (exclude_brands or set())}
         discovered_brands: List[BrandOpportunity] = []
@@ -60,7 +143,7 @@ class BrandFinder:
             search_results = await self.web_search.search_brands_for_niche(
                 niche=niche,
                 location=location,
-                limit=limit * 2,
+                limit=limit * 3,
             )
 
             for item in search_results:
@@ -71,9 +154,9 @@ class BrandFinder:
                     continue
 
                 # Derive clean brand name from title or domain
-                clean_name = title.split(" - ")[0].split(" | ")[0].split(":")[0].strip()
-                if not clean_name or len(clean_name) > 40:
-                    clean_name = domain.split(".")[0].capitalize()
+                clean_name = self._sanitize_brand_name(title, domain)
+                if not self._is_authentic_brand(clean_name, domain=domain, title=title):
+                    continue
 
                 if clean_name.lower() in excluded:
                     continue
@@ -82,6 +165,10 @@ class BrandFinder:
                 crawl_data = await self.deep_bio.crawl_brand_site(url, max_subpages=3)
                 raw_emails = crawl_data.get("emails", [])
                 raw_phones = crawl_data.get("phones", [])
+                socials = crawl_data.get("socials", {})
+                collab_form_url = crawl_data.get("collab_form_url")
+                email_tier = crawl_data.get("primary_email_tier", "Tier 2 (Marketing Desk)")
+                whatsapp_ready = crawl_data.get("whatsapp_ready", False)
 
                 verified_email = None
                 if raw_emails:
@@ -93,15 +180,22 @@ class BrandFinder:
                     contact_email=verified_email or (raw_emails[0] if raw_emails else f"partnerships@{domain}"),
                     pr_email=raw_emails[0] if raw_emails else None,
                     phone_number=raw_phones[0] if raw_phones else None,
-                    mobile_number=raw_phones[0] if raw_phones else None,
-                    instagram_handle=f"@{domain.split('.')[0]}",
-                    website=url,
+                    instagram_handle=socials.get("instagram_handle") or socials.get("instagram") or f"@{domain.split('.')[0]}",
+                    website=crawl_data.get("effective_url", url),
+                    linkedin_url=socials.get("linkedin"),
+                    youtube_url=socials.get("youtube"),
+                    twitter_url=socials.get("twitter"),
+                    linktree_url=socials.get("linktree"),
+                    collab_form_url=collab_form_url,
+                    meta_ad_library_url=self.deep_bio.generate_meta_ad_library_url(clean_name),
+                    email_tier=email_tier,
+                    whatsapp_ready=whatsapp_ready,
                     source="live_web_discovery",
                 )
 
                 opp = BrandOpportunity(
                     brand_name=clean_name,
-                    website=url,
+                    website=crawl_data.get("effective_url", url),
                     industry=f"{niche.capitalize()} / DTC",
                     location=location,
                     fit_score=92,
@@ -194,13 +288,22 @@ class BrandFinder:
                 if match:
                     emails = ob.get("marketing_emails", [])
                     phones = ob.get("phone_numbers", [])
+                    socials = ob.get("socials", {})
                     contact = BrandContact(
                         contact_email=emails[0] if emails else None,
                         pr_email=emails[0] if emails else None,
                         phone_number=phones[0] if phones else None,
                         mobile_number=phones[0] if phones else None,
-                        instagram_handle=ob.get("instagram_handle"),
+                        instagram_handle=socials.get("instagram") or ob.get("instagram_handle"),
                         website=ob.get("website"),
+                        linkedin_url=socials.get("linkedin") or ob.get("linkedin_url"),
+                        youtube_url=socials.get("youtube") or ob.get("youtube_url"),
+                        twitter_url=socials.get("twitter") or ob.get("twitter_url"),
+                        linktree_url=socials.get("linktree") or ob.get("linktree_url"),
+                        collab_form_url=ob.get("collab_form_url"),
+                        meta_ad_library_url=ob.get("meta_ad_library_url") or self.deep_bio.generate_meta_ad_library_url(b_name),
+                        email_tier=ob.get("email_tier", "Tier 2 (Marketing Desk)"),
+                        whatsapp_ready=bool(ob.get("whatsapp_ready", False)),
                         source="okf_knowledge_framework",
                     )
                     opp = BrandOpportunity(
@@ -278,8 +381,12 @@ class BrandFinder:
         """
         niche_str = ", ".join(niche_tags) if niche_tags else "lifestyle"
         prompt = f"""
-Identify {needed} REAL, POPULAR, active Instagram advertiser brands in {location} matching niches: {niche_str}.
-CRITICAL: Do NOT include any of the following already contacted brands: {', '.join(list(exclude_brands)[:25])}.
+Identify {needed} REAL, WELL-KNOWN, genuine commercial brands or companies in {location} actively selling products and sponsoring creators in niches: {niche_str}.
+CRITICAL INSTRUCTIONS:
+- Return ONLY authentic, real-world existing brands (e.g. Nykaa, Sugar Cosmetics, Mamaearth, Snitch, Lenskart, boAt, Cult.fit, etc.).
+- NEVER generate fake, placeholder, or sequential names (DO NOT use "Direct 1", "Direct 2", "Test Brand", "Company X").
+- NEVER return listicles or articles (DO NOT return "10 Best Brands", "Companies in City").
+- Do NOT include any of the following already contacted brands: {', '.join(list(exclude_brands)[:25])}.
 
 Return a JSON array of objects with the exact schema:
 [
@@ -319,6 +426,9 @@ Return a JSON array of objects with the exact schema:
                         continue
 
                     raw_domain = it.get("website", "brand.com").replace("https://", "").replace("http://", "").split("/")[0].strip().replace(" ", "")
+                    # Strictly validate brand authenticity and reject test/mock names
+                    if not self._is_authentic_brand(name, domain=raw_domain, title=name):
+                        continue
                     target_url = (it.get("website") or f"https://{raw_domain}").strip().replace(" ", "")
                     if not target_url.startswith("http"):
                         target_url = f"https://{target_url}"
@@ -337,6 +447,11 @@ Return a JSON array of objects with the exact schema:
                     except Exception as crawl_err:
                         logger.debug(f"Live website crawl note for {name}: {crawl_err}")
 
+                    socials = crawl_info.get("socials", {}) if "crawl_info" in locals() and crawl_info else {}
+                    collab_form_url = crawl_info.get("collab_form_url") if "crawl_info" in locals() and crawl_info else None
+                    email_tier = crawl_info.get("primary_email_tier", "Tier 2 (Marketing Desk)") if "crawl_info" in locals() and crawl_info else "Tier 2 (Marketing Desk)"
+                    whatsapp_ready = crawl_info.get("whatsapp_ready", False) if "crawl_info" in locals() and crawl_info else False
+
                     primary_email = (
                         crawled_emails[0] if crawled_emails
                         else it.get("contact_email")
@@ -352,9 +467,17 @@ Return a JSON array of objects with the exact schema:
                         pr_email=crawled_emails[0] if crawled_emails else None,
                         phone_number=primary_phone,
                         mobile_number=primary_phone,
-                        instagram_handle=it.get("instagram_handle") or f"@{name.lower().replace(' ', '')}",
+                        instagram_handle=socials.get("instagram_handle") or socials.get("instagram") or it.get("instagram_handle") or f"@{name.lower().replace(' ', '')}",
                         website=effective_url,
-                        source="live_web_verified" if crawled_emails or crawled_phones else "dynamic_ai_discovery",
+                        linkedin_url=socials.get("linkedin"),
+                        youtube_url=socials.get("youtube"),
+                        twitter_url=socials.get("twitter"),
+                        linktree_url=socials.get("linktree"),
+                        collab_form_url=collab_form_url,
+                        meta_ad_library_url=self.deep_bio.generate_meta_ad_library_url(name),
+                        email_tier=email_tier,
+                        whatsapp_ready=whatsapp_ready,
+                        source="live_web_verified" if (crawled_emails or crawled_phones) else "dynamic_ai_discovery",
                     )
                     fresh.append(
                         BrandOpportunity(
@@ -373,248 +496,7 @@ Return a JSON array of objects with the exact schema:
         except Exception as e:
             logger.debug(f"Dynamic brand discovery LLM error: {e}")
 
-        # If still needed, draw from authentic real-world brand candidates across niches
-        # and live-crawl their actual websites on the open web. Zero synthetic/dummy placeholders.
-        if len(fresh) < needed:
-            authentic_real_brands = self._get_authentic_brand_candidates(niche_tags, location)
-            for cand in authentic_real_brands:
-                if len(fresh) >= needed:
-                    break
-                cand_name = cand["brand_name"]
-                if cand_name.lower().strip() in exclude_brands or any(f.brand_name.lower() == cand_name.lower() for f in fresh):
-                    continue
-
-                # Live crawl the authentic brand website
-                url = cand["website"]
-                crawled_emails = []
-                crawled_phones = []
-                effective_url = url
-                try:
-                    crawl_res = await self.deep_bio.crawl_brand_site(url, max_subpages=2)
-                    crawled_emails = crawl_res.get("emails", [])
-                    crawled_phones = crawl_res.get("phones", [])
-                    effective_url = crawl_res.get("effective_url", url)
-                except Exception:
-                    pass
-
-                raw_dom = effective_url.replace("https://", "").replace("http://", "").split("/")[0]
-                contact = BrandContact(
-                    contact_email=crawled_emails[0] if crawled_emails else cand.get("default_email", f"collab@{raw_dom}"),
-                    pr_email=crawled_emails[0] if crawled_emails else None,
-                    phone_number=crawled_phones[0] if crawled_phones else cand.get("default_phone"),
-                    mobile_number=crawled_phones[0] if crawled_phones else cand.get("default_phone"),
-                    instagram_handle=cand.get("instagram_handle"),
-                    website=effective_url,
-                    source="live_web_verified" if crawled_emails or crawled_phones else "open_web_intelligence",
-                )
-                fresh.append(
-                    BrandOpportunity(
-                        brand_name=cand_name,
-                        website=effective_url,
-                        industry=cand.get("industry", "Lifestyle"),
-                        location=location,
-                        fit_score=cand.get("fit_score", 92),
-                        ad_probability="Very High (Active Instagram Advertiser)",
-                        collab_type="UGC Video & Sponsored Reel",
-                        value_proposition=cand.get("value_prop", f"Leading brand in {cand.get('industry')}"),
-                        contact=contact,
-                        suggested_angle=cand.get("suggested_angle", f"Creative aesthetic showcase for {cand_name}"),
-                    )
-                )
-
         return fresh[:needed]
-
-    def _get_authentic_brand_candidates(self, niche_tags: List[str], location: str) -> List[Dict[str, Any]]:
-        """
-        Returns real-world, authentic brands operating with verified websites
-        and active creator marketing programs to backstop discovery.
-        100% genuine entities, zero synthetic mock strings.
-        """
-        all_candidates = [
-            # Hospitality & Travel
-            {
-                "brand_name": "Evolve Back Luxury Resorts",
-                "website": "https://evolveback.com",
-                "instagram_handle": "@evolveback",
-                "industry": "Luxury Eco-Resorts & Hospitality",
-                "default_email": "reservations@evolveback.com",
-                "default_phone": "+91 80 4115 2200",
-                "suggested_angle": "Immersive luxury eco-resort villa tour & sustainable heritage reel",
-                "keywords": ["resort", "hotel", "travel", "hospitality", "staycation", "luxury", "eco"],
-            },
-            {
-                "brand_name": "The Tamara Resorts",
-                "website": "https://thetamara.com",
-                "instagram_handle": "@thetamara",
-                "industry": "Luxury Eco-Resorts & Hospitality",
-                "default_email": "reservations@thetamara.com",
-                "default_phone": "+91 80655 51300",
-                "suggested_angle": "Coffee plantation luxury retreat & wellness spa experience",
-                "keywords": ["resort", "hotel", "travel", "hospitality", "staycation", "nature", "eco", "luxury"],
-            },
-            {
-                "brand_name": "Ayatana Resorts",
-                "website": "https://ayatanaresorts.com",
-                "instagram_handle": "@ayatanaresorts",
-                "industry": "Luxury Eco-Resorts & Hospitality",
-                "default_email": "reservations@ayatanaresorts.com",
-                "default_phone": "+91 99000 82222",
-                "suggested_angle": "Private waterfall cottage & serene nature getaway showcase",
-                "keywords": ["resort", "hotel", "travel", "hospitality", "staycation", "waterfall"],
-            },
-            {
-                "brand_name": "CGH Earth Experience Hotels",
-                "website": "https://cghearth.com",
-                "instagram_handle": "@cghearth",
-                "industry": "Luxury Eco-Resorts & Hospitality",
-                "default_email": "contact@cghearth.com",
-                "default_phone": "+91 48442 61720",
-                "suggested_angle": "Eco-conscious sustainable living & farm-to-table culinary reel",
-                "keywords": ["resort", "hotel", "travel", "hospitality", "eco", "sustainable", "heritage"],
-            },
-            {
-                "brand_name": "Sula Vineyards & Resort",
-                "website": "https://sulavineyards.com",
-                "instagram_handle": "@sulavineyards",
-                "industry": "Luxury Eco-Resorts & Hospitality",
-                "default_email": "info@sulawines.com",
-                "default_phone": "+91 99700 90010",
-                "suggested_angle": "Scenic vineyard staycation with sunset tasting & aesthetic picnic",
-                "keywords": ["resort", "hotel", "travel", "wine", "vineyard", "hospitality", "staycation"],
-            },
-            # Apparel & Fashion
-            {
-                "brand_name": "Snitch",
-                "website": "https://snitch.co.in",
-                "instagram_handle": "@snitch.co.in",
-                "industry": "Men's Fashion & Streetwear",
-                "default_email": "collab@snitch.co.in",
-                "default_phone": "+91 80 6900 1000",
-                "suggested_angle": "Streetwear lookbook reel & transition video featuring newest drop",
-                "keywords": ["fashion", "apparel", "clothing", "menswear", "streetwear", "style"],
-            },
-            {
-                "brand_name": "BlissClub",
-                "website": "https://blissclub.com",
-                "instagram_handle": "@myblissclub",
-                "industry": "Women's Activewear & Apparel",
-                "default_email": "collaborations@blissclub.com",
-                "default_phone": "+91 80 4719 2030",
-                "suggested_angle": "Activewear movement test & day-in-the-life pocket challenge reel",
-                "keywords": ["fashion", "activewear", "apparel", "fitness", "women", "clothing"],
-            },
-            {
-                "brand_name": "Urbanic",
-                "website": "https://urbanic.com",
-                "instagram_handle": "@urbanic_in",
-                "industry": "Fast Fashion & Trendy Outfits",
-                "default_email": "collab@urbanic.com",
-                "default_phone": "+91 80 3724 4400",
-                "suggested_angle": "Seasonal outfit haul & styling tips for weekend aesthetics",
-                "keywords": ["fashion", "trendy", "apparel", "style", "outfits", "haul"],
-            },
-            # Beauty, Skincare & Wellness
-            {
-                "brand_name": "Forest Essentials",
-                "website": "https://forestessentialsindia.com",
-                "instagram_handle": "@forestessentials",
-                "industry": "Luxury Ayurvedic Skincare",
-                "default_email": "service@forestessentialsindia.com",
-                "default_phone": "+91 80101 02222",
-                "suggested_angle": "Morning skincare ritual reel with pure botanical extracts",
-                "keywords": ["beauty", "skincare", "ayurveda", "luxury", "wellness", "cosmetics"],
-            },
-            {
-                "brand_name": "Plum Goodness",
-                "website": "https://plumgoodness.com",
-                "instagram_handle": "@plumgoodness",
-                "industry": "Vegan Beauty & Clean Skincare",
-                "default_email": "collab@plumgoodness.com",
-                "default_phone": "+91 75064 96604",
-                "suggested_angle": "Clean beauty glow routine & texture reel",
-                "keywords": ["beauty", "skincare", "vegan", "clean", "wellness"],
-            },
-            {
-                "brand_name": "Dot & Key Skincare",
-                "website": "https://dotandkey.com",
-                "instagram_handle": "@dotandkey.skincare",
-                "industry": "Targeted Dermatological Skincare",
-                "default_email": "care@dotandkey.com",
-                "default_phone": "+91 84484 46684",
-                "suggested_angle": "Sunscreen stick application & barrier repair routine",
-                "keywords": ["beauty", "skincare", "sunscreen", "dermatology", "serum"],
-            },
-            # Travel Tech, Luggage & Accessories
-            {
-                "brand_name": "Mokobara",
-                "website": "https://mokobara.com",
-                "instagram_handle": "@mokobara",
-                "industry": "Premium Travel Luggage & Bags",
-                "default_email": "creators@mokobara.com",
-                "default_phone": "+91 96069 52920",
-                "suggested_angle": "Pack with me for a 3-day getaway: transit aesthetic reel",
-                "keywords": ["travel", "luggage", "bags", "transit", "backpack", "tech"],
-            },
-            {
-                "brand_name": "UGREEN",
-                "website": "https://ugreen.com",
-                "instagram_handle": "@ugreen.official",
-                "industry": "Fast Charging & Travel Tech",
-                "default_email": "collab@ugreen.com",
-                "default_phone": "+1 800 555 0199",
-                "suggested_angle": "Everyday carry EDC tech setup for mobile content creators",
-                "keywords": ["tech", "charging", "electronics", "gadgets", "creator", "gear"],
-            },
-            # Specialty Food & Coffee
-            {
-                "brand_name": "Third Wave Coffee",
-                "website": "https://thirdwavecoffee.in",
-                "instagram_handle": "@thirdwavecoffeeindia",
-                "industry": "Artisanal Coffee & Cafes",
-                "default_email": "collaborations@thirdwavecoffee.in",
-                "default_phone": "+91 80 4710 8888",
-                "suggested_angle": "Cafe working vibe & specialty brew pairing reel",
-                "keywords": ["coffee", "cafe", "food", "beverage", "lifestyle"],
-            },
-            {
-                "brand_name": "Slurp Farm",
-                "website": "https://slurpfarm.com",
-                "instagram_handle": "@slurpfarm",
-                "industry": "Healthy Organic Food & Millet Snacks",
-                "default_email": "partner@slurpfarm.com",
-                "default_phone": "+91 93111 26222",
-                "suggested_angle": "Wholesome snack recipe & clean eating lifestyle reel",
-                "keywords": ["food", "snacks", "organic", "healthy", "nutrition", "kids"],
-            },
-            # Fitness
-            {
-                "brand_name": "Cult.fit",
-                "website": "https://cult.fit",
-                "instagram_handle": "@cultfit",
-                "industry": "Fitness, Gyms & Healthy Living",
-                "default_email": "partnerships@cult.fit",
-                "default_phone": "+91 80 6900 8800",
-                "suggested_angle": "High-energy workout challenge & active lifestyle routine",
-                "keywords": ["fitness", "gym", "workout", "health", "exercise", "sports"],
-            },
-        ]
-
-        # Score candidates based on requested niche tags
-        query_words = [t.lower().replace("#", "").strip() for t in niche_tags]
-        
-        def score(c):
-            pts = 0
-            for w in query_words:
-                if any(w in kw for kw in c["keywords"]):
-                    pts += 3
-                if w in c["industry"].lower():
-                    pts += 4
-                if w in c["brand_name"].lower():
-                    pts += 5
-            return pts
-
-        ranked = sorted(all_candidates, key=score, reverse=True)
-        return ranked
 
 
 brand_finder = BrandFinder()
